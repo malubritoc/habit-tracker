@@ -75,22 +75,22 @@
 
 @layer base {
   * {
-    @apply border-[#64748B];
+    @apply border-baby-gray;
   }
   body {
     @apply text-black;
 
     input::placeholder {
-      @apply text-sm text-[#64748B];
+      @apply text-sm text-default-gray;
     }
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-default-gray;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-white text-dark-blue;
   }
 }

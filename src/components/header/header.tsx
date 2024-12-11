@@ -16,7 +16,7 @@ export function Header() {
       className={clsx(
         "flex items-center justify-between",
         "px-16 py-4",
-        "bg-[#013750]"
+        "bg-dark-blue"
       )}
     >
       <Image src={logo} alt="Logo" width={70} height={70} />
@@ -27,7 +27,7 @@ export function Header() {
           <DropdownMenuTrigger>
             <User size={28} color="#fef5c8" />
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
+          <DropdownMenuContent className="bg-white">
             <DropdownMenuItem className="flex gap-2 items-center">
               <User size={16} />
               <p>Meu Perfil</p>
