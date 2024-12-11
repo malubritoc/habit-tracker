@@ -1,3 +1,5 @@
+"use client";
+
 import clsx from "clsx";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
@@ -9,8 +11,29 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import { useRouter } from "next/navigation";
 
 export function Header() {
+  const router = useRouter();
+
+  const menuOptions = [
+    {
+      title: "Meu Perfil",
+      icon: <User size={16} />,
+      onClick: () => router.push("/profile"),
+    },
+    {
+      title: "Meu Progresso",
+      icon: <ChartNoAxesCombined size={16} />,
+      onClick: () => router.push("/progress"),
+    },
+    {
+      title: "Sair",
+      icon: <LogOut size={16} />,
+      onClick: () => router.push("/logout"),
+    },
+  ];
+
   return (
     <div
       className={clsx(
@@ -28,19 +51,20 @@ export function Header() {
             <User size={28} color="#fef5c8" />
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-white">
-            <DropdownMenuItem className="flex gap-2 items-center">
-              <User size={16} />
-              <p>Meu Perfil</p>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="flex gap-2 items-center">
-              <ChartNoAxesCombined size={16} />
-              <p>Meu Progresso</p>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem className="flex gap-2 items-center">
-              <LogOut size={16} />
-              <p>Sair</p>
-            </DropdownMenuItem>
+            {menuOptions.map((option, index) => (
+              <div key={index}>
+                <DropdownMenuItem
+                  onClick={option.onClick}
+                  className="cursor-pointer"
+                >
+                  <div className="flex items-center gap-2">
+                    {option.icon}
+                    <span>{option.title}</span>
+                  </div>
+                </DropdownMenuItem>
+                {index == 1 && <DropdownMenuSeparator />}
+              </div>
+            ))}
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
