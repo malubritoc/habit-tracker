@@ -12,6 +12,12 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip";
 
 export function Header() {
   const router = useRouter();
@@ -44,7 +50,18 @@ export function Header() {
     >
       <Image src={logo} alt="Logo" width={70} height={70} />
       <div className="flex items-center gap-3">
-        <Plus size={28} color="#fef5c8" />
+        <TooltipProvider>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <div className="cursor-pointer">
+                <Plus size={28} color="#fef5c8" />
+              </div>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Adicionar novo hábito</p>
+            </TooltipContent>
+          </Tooltip>
+        </TooltipProvider>
         <div className="h-8 border border-t-[1px] border-[#fef5c8]" />
         <DropdownMenu>
           <DropdownMenuTrigger>
