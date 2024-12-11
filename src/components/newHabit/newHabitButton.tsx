@@ -1,3 +1,5 @@
+"use client";
+
 import { Plus } from "lucide-react";
 import {
   Tooltip,
@@ -7,10 +9,13 @@ import {
 } from "../ui/tooltip";
 import { Dialog, DialogContent, DialogTrigger } from "../ui/dialog";
 import { NewHabitDialogContent } from "./newHabitDialogContent";
+import { useState } from "react";
 
 export function NewHabitButton() {
+  const [open, setOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <TooltipProvider>
           <Tooltip>
@@ -26,7 +31,7 @@ export function NewHabitButton() {
         </TooltipProvider>
       </DialogTrigger>
       <DialogContent>
-        <NewHabitDialogContent />
+        <NewHabitDialogContent setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );
