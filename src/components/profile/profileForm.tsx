@@ -10,7 +10,6 @@ import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
 import { useEffect, useState } from "react";
-import { Separator } from "../ui/separator";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome inválido."),
@@ -87,7 +86,6 @@ export function ProfileForm() {
           <span className="error-message">{errors.email.message}</span>
         )}
       </div>
-      <Separator className="mt-4 mb-2" />
       {edit && (
         <Button
           disabled={loading}
