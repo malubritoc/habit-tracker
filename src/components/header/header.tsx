@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
-import { NewHabitButton } from "./newHabitButton";
+import { NewHabitButton } from "../newHabit/newHabitButton";
 
 export function Header() {
   const router = useRouter();
