@@ -19,9 +19,8 @@ import { Textarea } from "../ui/textarea";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Separator } from "../ui/separator";
-import { DialogClose } from "../ui/dialog";
 import { Checkbox } from "../ui/checkbox";
 
 const newHabitFormSchema = z.object({
@@ -33,7 +32,11 @@ const newHabitFormSchema = z.object({
 
 type newHabitFormInputs = z.infer<typeof newHabitFormSchema>;
 
-export function NewHabitForm() {
+export function NewHabitForm({
+  setOpen,
+}: {
+  setOpen: Dispatch<SetStateAction<boolean>>;
+}) {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const days = [
@@ -161,11 +164,13 @@ export function NewHabitForm() {
         <Button disabled={loading} type="submit" className="w-full px-6">
           {loading ? <SpinnerGraySmall /> : "Adicionar hábito"}
         </Button>
-        <DialogClose>
-          <Button variant="cancel" className="w-full px-6">
-            Cancelar
-          </Button>
-        </DialogClose>
+        <Button
+          onClick={() => setOpen(false)}
+          variant="cancel"
+          className="w-full px-6"
+        >
+          Cancelar
+        </Button>
       </div>
     </form>
   );

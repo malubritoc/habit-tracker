@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        <main className="w-screen min-h-screen flex justify-center bg-slate-50">
+        <main className="w-screen min-h-screen flex justify-center">
           <div className="w-full flex gap-0 items-start justify-center overflow-hidden shadow-custom">
             {children}
           </div>
