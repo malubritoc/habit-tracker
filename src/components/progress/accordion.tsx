@@ -12,6 +12,16 @@ export function ProgressAccordion() {
     { title: "Beber 2 litros d'àgua", frequency: "Diária" },
     { title: "Beber 2 litros d'àgua", frequency: "Diária" },
     { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
+    { title: "Beber 2 litros d'àgua", frequency: "Diária" },
   ];
 
   return (
