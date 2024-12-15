@@ -84,7 +84,10 @@ export function NewHabitForm({
       await createHabit("habits", {
         name: data.title,
         frequency: parseInt(data.frequency),
-        days: selectedDays,
+        days:
+          frequency == "7"
+            ? ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+            : selectedDays,
         done: false,
       });
       setLoading(false);

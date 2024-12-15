@@ -1,6 +1,7 @@
 "use client";
 
 import { getAllHabits, updateHabitStatusFB } from "@/services/firebase";
+import { DayOfWeek } from "@/types/daysOfTheWeek";
 import { Habit } from "@/types/habit";
 import clsx from "clsx";
 import { Check } from "lucide-react";
@@ -8,12 +9,19 @@ import { useEffect, useState } from "react";
 
 export default function HomePage() {
   const [habits, setHabits] = useState<Habit[]>([]);
+  const daysOfWeek = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
+  const today = daysOfWeek[new Date().getDay()];
+
+  console.log(today);
 
   async function fetchHabits() {
     try {
       const response = await getAllHabits();
-      response.sort((a: Habit, b: Habit) => Number(a.done) - Number(b.done));
-      setHabits(response);
+      const todayHabits = response.filter((habit: Habit) =>
+        habit.days.includes(today as DayOfWeek)
+      );
+      todayHabits.sort((a: Habit, b: Habit) => Number(a.done) - Number(b.done));
+      setHabits(todayHabits);
     } catch (error) {
       console.error(error);
     }
