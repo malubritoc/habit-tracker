@@ -3,12 +3,14 @@
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { updateHabitRecordStatusFB } from "@/services/firebase";
 import { Record } from "@/types/records";
+import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
 import { Check } from "lucide-react";
 import { useContext } from "react";
 
 export default function HomePage() {
   const { records, setRecords } = useContext(RecordsContext);
+  const today = formatDate(new Date().toISOString().split("T")[0]);
 
   async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
     try {
@@ -42,8 +44,7 @@ export default function HomePage() {
       <div className="flex flex-col gap-0">
         <h1 className="text-3xl font-bold">Olá, Maria!</h1>
         <h4 className="text-md text-default-gray">
-          Hoje é dia <strong>09 de dezembro de 2024</strong>. O que você fez
-          hoje?
+          Hoje é dia <strong>{today}</strong>. O que você fez hoje?
         </h4>
       </div>
       <div className="grid md:grid-cols-6 md:gap-8 grid-cols-2 gap-4 self-center">
