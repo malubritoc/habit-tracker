@@ -44,7 +44,10 @@ export async function createHabit(collectionName: string, habit: { name: string;
     try {
       const docRef = await addDoc(collection(db, collectionName), habit);
       console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
-      return docRef.id; 
+      return {
+        ...habit,
+        id: docRef.id,
+      }; 
     } catch (error) {
       console.error("Erro ao criar hábito: ", error);
       throw error;
@@ -98,7 +101,10 @@ export async function createHabit(collectionName: string, habit: { name: string;
   
       const docRef = await addDoc(collection(db, "records"), newRecord)
       // console.log(`Registro criado com sucesso para o hábito "${habit.name}" no dia ${today}.`);
-      return docRef.id;
+      return {
+        ...newRecord,
+        id: docRef.id,
+      }
     } catch (error) {
       console.error("Erro ao criar registro diário: ", error);
       throw error;

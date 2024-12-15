@@ -39,6 +39,10 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
       }
 
       const recordsResponse = await getTodayRecords();
+
+      recordsResponse.sort((a: Record, b: Record) => {
+        return Number(a.done) - Number(b.done);
+      });
       // console.log(recordsResponse);
       setRecords(recordsResponse);
     } catch (error) {
