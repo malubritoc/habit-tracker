@@ -22,12 +22,14 @@ import { useToast } from "../hooks/use-toast";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
+import { createHabit } from "@/services/firebase";
+import { DayOfWeek } from "@/types/daysOfTheWeek";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Formato de conteúdo inválido.").max(24),
   description: z.string(),
   frequency: z.string(),
-  days: z.array(z.number()).optional(),
+  days: z.array(z.string()).optional(),
 });
 
 type newHabitFormInputs = z.infer<typeof newHabitFormSchema>;
@@ -40,14 +42,15 @@ export function NewHabitForm({
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const days = [
-    { title: "Segunda-feira", value: 0 },
-    { title: "Terça-feira", value: 1 },
-    { title: "Quarta-feira", value: 2 },
-    { title: "Quinta-feira", value: 3 },
-    { title: "Sexta-feira", value: 4 },
-    { title: "Sábado", value: 5 },
-    { title: "Domingo", value: 6 },
+    { title: "Segunda-feira", value: "mon" as DayOfWeek },
+    { title: "Terça-feira", value: "tue" as DayOfWeek },
+    { title: "Quarta-feira", value: "wed" as DayOfWeek },
+    { title: "Quinta-feira", value: "thu" as DayOfWeek },
+    { title: "Sexta-feira", value: "fri" as DayOfWeek },
+    { title: "Sábado", value: "sat" as DayOfWeek },
+    { title: "Domingo", value: "sun" as DayOfWeek },
   ];
+  const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
 
   const {
     register,
@@ -65,11 +68,27 @@ export function NewHabitForm({
 
   const frequency = watch("frequency");
 
-  function handleCreateNewHabit(data: newHabitFormInputs) {
+  function handleDayChange(day: DayOfWeek) {
+    setSelectedDays(
+      (prevDays) =>
+        prevDays.includes(day)
+          ? prevDays.filter((d) => d !== day) // Remove o dia se já estiver selecionado
+          : [...prevDays, day] // Adiciona o dia se não estiver selecionado
+    );
+  }
+
+  async function handleCreateNewHabit(data: newHabitFormInputs) {
     setLoading(true);
     try {
       console.log(data);
+      await createHabit("habits", {
+        name: data.title,
+        frequency: parseInt(data.frequency),
+        days: selectedDays,
+        done: false,
+      });
       setLoading(false);
+      setOpen(false);
     } catch (error) {
       console.log(error);
       toast({
@@ -146,7 +165,11 @@ export function NewHabitForm({
             {days.map((day, idx) => {
               return (
                 <div key={idx} className="flex items-center gap-2">
-                  <Checkbox id={day.title} />
+                  <Checkbox
+                    id={day.title}
+                    checked={selectedDays.includes(day.value)}
+                    onCheckedChange={() => handleDayChange(day.value)}
+                  />
                   <label
                     htmlFor={day.title}
                     className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"

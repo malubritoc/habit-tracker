@@ -1,27 +1,38 @@
+"use client";
+
+import { getAllHabits, updateHabitStatusFB } from "@/services/firebase";
+import { Habit } from "@/types/habit";
 import clsx from "clsx";
 import { Check } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function HomePage() {
-  const habits = [
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: false },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-    { title: "Beber 2 litros d'água por dia", done: true },
-  ];
+  const [habits, setHabits] = useState<Habit[]>([]);
+
+  async function fetchHabits() {
+    try {
+      const response = await getAllHabits();
+      response.sort((a: Habit, b: Habit) => Number(a.done) - Number(b.done));
+      setHabits(response);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    fetchHabits();
+  }, []);
+
+  async function updateHabitStatus(habitId: string, done: boolean) {
+    try {
+      await updateHabitStatusFB("habits", habitId, done);
+      fetchHabits();
+      // console.log(`Hábito ${habitId} atualizado com sucesso!`);
+    } catch (error) {
+      console.error("Erro ao atualizar o hábito: ", error);
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0">
@@ -35,6 +46,7 @@ export default function HomePage() {
         {habits.map((habit, idx) => {
           return (
             <div
+              onClick={() => updateHabitStatus(habit.id, !habit.done)}
               data-done={habit.done}
               className={clsx(
                 "flex flex-col justify-between",
@@ -46,7 +58,7 @@ export default function HomePage() {
               )}
               key={idx}
             >
-              <p className="max-w-[90%]">{habit.title}</p>
+              <p className="max-w-[90%]">{habit.name}</p>
               {habit.done ? (
                 <div className="w-full flex justify-end">
                   <Check size={24} color="#2c6b74" />
