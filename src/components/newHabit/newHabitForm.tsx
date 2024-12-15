@@ -69,27 +69,6 @@ export function NewHabitForm({
 
   const frequency = watch("frequency");
 
-  function updateRecords(habitRecordId: string, done: boolean) {
-    setRecords((prev) => {
-      if (!prev) return [];
-
-      // Atualiza o registro no array
-      const updatedRecords = prev.map((record) => {
-        if (record.id === habitRecordId) {
-          return { ...record, done };
-        }
-        return record;
-      });
-
-      // Ordena os registros para que 'done = false' apareçam primeiro
-      updatedRecords.sort(
-        (a: Record, b: Record) => Number(a.done) - Number(b.done)
-      );
-
-      return updatedRecords;
-    });
-  }
-
   function handleDayChange(day: DayOfWeek) {
     setSelectedDays(
       (prevDays) =>
@@ -115,7 +94,17 @@ export function NewHabitForm({
         .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {
           if (record) {
-            updateRecords(record.id, record.done);
+            setRecords((prev) => {
+              if (!prev) return [];
+
+              const updatedRecords = [...prev, record];
+              updatedRecords.sort(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (a: any, b: any) => Number(a.done) - Number(b.done)
+              );
+
+              return updatedRecords;
+            }); // Atualiza a lista de registros
           }
         });
       setLoading(false);
