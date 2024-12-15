@@ -42,7 +42,7 @@ export default function HomePage() {
           hoje?
         </h4>
       </div>
-      <div className="grid grid-cols-6 gap-8">
+      <div className="grid md:grid-cols-6 md:gap-8 grid-cols-2 gap-4 self-center">
         {habits.map((habit, idx) => {
           return (
             <div
