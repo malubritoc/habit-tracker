@@ -63,7 +63,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
   
       // Verifica se o hábito está ativo no dia atual
       if (!habit.days.includes(today)) {
-        console.log(`O hábito "${habit.name}" não está configurado para o dia de hoje (${today}).`);
+        // console.log(`O hábito "${habit.name}" não está configurado para o dia de hoje (${today}).`);
         return;
       }
   
@@ -77,11 +77,9 @@ export async function createHabit(collectionName: string, habit: { name: string;
       );
   
       const querySnapshot = await getDocs(q);
-
-      console.log(querySnapshot);
   
       if (!querySnapshot.empty) {
-        console.log(`Já existe um registro para o hábito "${habit.name}" no dia de hoje (${today}).`);
+        // console.log(`Já existe um registro para o hábito "${habit.name}" no dia de hoje (${today}).`);
         return;
       }
   
@@ -99,7 +97,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
       };
   
       const docRef = await addDoc(collection(db, "records"), newRecord)
-      console.log(`Registro criado com sucesso para o hábito "${habit.name}" no dia ${today}.`);
+      // console.log(`Registro criado com sucesso para o hábito "${habit.name}" no dia ${today}.`);
       return docRef.id;
     } catch (error) {
       console.error("Erro ao criar registro diário: ", error);
