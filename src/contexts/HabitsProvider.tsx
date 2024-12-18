@@ -15,11 +15,13 @@ import { parseCookies } from "nookies";
 interface HabitsContextProps {
   habits: Habit[] | null;
   setHabits: Dispatch<SetStateAction<Habit[] | null>>;
+  loading: boolean;
 }
 export const HabitsContext = createContext({} as HabitsContextProps);
 
 export function HabitsProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[] | null>(null);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const user_id = parseCookies()["habit-tracker-user"];
 
@@ -29,6 +31,12 @@ export function HabitsProvider({ children }: { children: React.ReactNode }) {
       const habitsResponse = await getHabitsByUserId(user_id);
 
       setHabits(habitsResponse);
+
+      if (!habitsResponse || habitsResponse.length === 0) {
+        setHabits([]);
+      }
+
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -44,7 +52,7 @@ export function HabitsProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <HabitsContext.Provider value={{ habits, setHabits }}>
+    <HabitsContext.Provider value={{ habits, setHabits, loading }}>
       {children}
     </HabitsContext.Provider>
   );
