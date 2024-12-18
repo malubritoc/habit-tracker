@@ -6,4 +6,5 @@ export interface Record {
     done: boolean;
     createdAt: string;
     habit_id: string;
+    user_id: string;
 }
