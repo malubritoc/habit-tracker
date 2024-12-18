@@ -1,6 +1,7 @@
 "use client";
 
 import { RecordsContext } from "@/contexts/RecordsProvider";
+import { UserContext } from "@/contexts/UserProvider";
 import { updateHabitRecordStatusFB } from "@/services/firebase";
 import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
@@ -10,6 +11,7 @@ import { useContext } from "react";
 
 export default function HomePage() {
   const { records, setRecords } = useContext(RecordsContext);
+  const { user } = useContext(UserContext);
   const today = formatDate(new Date().toISOString().split("T")[0]);
 
   async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
@@ -42,7 +44,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0">
-        <h1 className="text-3xl font-bold">Olá, Maria!</h1>
+        <h1 className="text-3xl font-bold">Olá, {user?.name}!</h1>
         <h4 className="text-md text-default-gray">
           Hoje é dia <strong>{today}</strong>. O que você fez hoje?
         </h4>
