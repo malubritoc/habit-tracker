@@ -13,9 +13,15 @@ import {
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { NewHabitButton } from "../newHabit/newHabitButton";
+import { logOut } from "@/services/firebase";
 
 export function Header() {
   const router = useRouter();
+
+  async function handleLogout() {
+    await logOut();
+    router.push("/");
+  }
 
   const menuOptions = [
     {
@@ -31,7 +37,7 @@ export function Header() {
     {
       title: "Sair",
       icon: <LogOut size={16} />,
-      onClick: () => router.push("/logout"),
+      onClick: () => handleLogout(),
     },
   ];
 

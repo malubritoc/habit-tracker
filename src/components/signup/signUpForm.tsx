@@ -11,6 +11,8 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { toast } from "../hooks/use-toast";
+import { signUp } from "@/services/firebase";
+import { useRouter } from "next/navigation";
 
 const signUpFormSchema = z.object({
   name: z.string().min(1, "Nome inválido."),
@@ -22,6 +24,7 @@ const signUpFormSchema = z.object({
 type SignUpFormInputs = z.infer<typeof signUpFormSchema>;
 
 export function SignUpForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [confirmShowPassword, setConfirmShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -29,16 +32,38 @@ export function SignUpForm() {
   const {
     register,
     handleSubmit,
-    // setError,
+    watch,
+    setError,
     formState: { errors },
   } = useForm<SignUpFormInputs>({
     resolver: zodResolver(signUpFormSchema),
   });
 
-  const handleSignIn = async (data: SignUpFormInputs) => {
+  const password = watch("password");
+  const confirmPassword = watch("confirmPassword");
+
+  const handleSignUp = async (data: SignUpFormInputs) => {
     setLoading(true);
     try {
       console.log(data);
+
+      if (password !== confirmPassword) {
+        setError("confirmPassword", {
+          type: "manual",
+          message: "As senhas não coincidem.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      await signUp({
+        email: data.email,
+        password: data.password,
+        name: data.name,
+      }).then(() => {
+        setLoading(false);
+        router.push("/");
+      });
     } catch (error) {
       console.error(error);
       toast({
@@ -52,7 +77,7 @@ export function SignUpForm() {
 
   return (
     <form
-      onSubmit={handleSubmit(handleSignIn)}
+      onSubmit={handleSubmit(handleSignUp)}
       className="w-full flex flex-col gap-[19px]"
     >
       <h3 className="text-xl text-[#1a1a1a] font-bold">
@@ -116,7 +141,7 @@ export function SignUpForm() {
             className="w-full outline-none"
             {...register("confirmPassword")}
           />
-          {showPassword ? (
+          {confirmShowPassword ? (
             <Eye
               color="black"
               size={16}

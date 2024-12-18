@@ -168,7 +168,13 @@ export function NewHabitForm({
         <div className="div-field">
           <Label>
             Selecione {frequency == "1" ? "o dia" : "os dias"}{" "}
-            <span className="text-default gray">(x/{frequency})</span>
+            <span
+              data-forbidden={selectedDays.length > Number(frequency)}
+              data-max={selectedDays.length == Number(frequency)}
+              className="text-default-gray/50 data-[forbidden=true]:text-red-500 data-[max=true]:text-green-500"
+            >
+              ({selectedDays.length}/{frequency})
+            </span>
           </Label>
           <div className="flex flex-col gap-1">
             {days.map((day, idx) => {

@@ -6,8 +6,25 @@ import { initializeApp } from "firebase/app";
 // import { getAnalytics } from "firebase/analytics";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-import { addDoc, collection, doc, getDocs, getFirestore, query, updateDoc, where } from "firebase/firestore";
-
+import { 
+  addDoc, 
+  collection, 
+  doc, 
+  getDoc, 
+  getDocs, 
+  getFirestore, 
+  query, 
+  setDoc, 
+  updateDoc, 
+  where 
+} from "firebase/firestore";
+import { 
+  createUserWithEmailAndPassword, 
+  getAuth, 
+  signInWithEmailAndPassword, 
+  signOut
+} from "firebase/auth";
+import { destroyCookie, setCookie } from "nookies";
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
@@ -25,8 +42,10 @@ const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 const db = getFirestore(app);
 // console.log(db);
+export const auth = getAuth(app);
 const habitsCollectionRef = collection(db, "habits");
 const recordsCollectionRef = collection(db, "records");
+const usersCollectionRef = collection(db, "users");
 
 export async function getAllHabits() {
     // console.log(db);
@@ -130,6 +149,102 @@ export async function createHabit(collectionName: string, habit: { name: string;
     //   console.log(`Hábito ${habitId} atualizado com sucesso!`);
     } catch (error) {
       console.error("Erro ao atualizar o hábito: ", error);
+      throw error;
+    }
+  }
+
+  export async function createUser(collectionName: string, user: { id: string, name: string; email: string; }) {
+    try {
+      const docRef = await addDoc(collection(db, collectionName), user);
+      console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
+      return user; 
+    } catch (error) {
+      console.error("Erro ao criar hábito: ", error);
+      throw error;
+    }
+  }
+
+  export async function getUserById(id: string) {
+    const q = query(usersCollectionRef, where("id", "==", id));
+    const querySnapshot = await getDocs(q);
+  
+    if (!querySnapshot.empty) {
+      // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
+      let data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      return data;
+    } else {
+      return null;
+    }
+  }
+
+
+  export async function signUp({email, password, name} : {email: string, password: string, name: string}) {
+    try {
+      // Cria o usuário no Firebase Authentication
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+  
+      const user = userCredential.user;
+  
+      // Salva informações adicionais no Firestore
+      await setDoc(doc(db, "Users", user.uid), {
+        name,
+        email,
+        password, // **Nunca armazene senhas em texto puro!** Use um hash se necessário.
+      });
+
+      await createUser("users", {id: user.uid, name, email});
+  
+      console.log("Usuário registrado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao registrar usuário:", error);
+      throw error;
+    }
+  }
+
+  export async function signIn({ email, password }:{email: string, password: string}) {
+    try {
+      // Autentica o usuário
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+  
+      const user = userCredential.user;
+  
+      // Busca informações adicionais no Firestore
+      const userDoc = await getDoc(doc(db, "Users", user.uid));
+  
+      if (userDoc.exists()) {
+        console.log("Dados do usuário:", {...userDoc.data(), uid: user.uid});
+        setCookie(null, 'habit-tracker-user', user.uid, {
+          maxAge: 30 * 24 * 60 * 60
+        });
+        return { ...userDoc.data(), uid: user.uid };
+      } else {
+        console.error("Usuário não encontrado no Firestore.");
+        return null;
+      }
+    } catch (error) {
+      console.error("Erro ao fazer login:", error);
+      throw error;
+    }
+  }
+
+  export async function logOut() {
+    try {
+      destroyCookie(null, 'habit-tracker-user');
+      await signOut(auth);
+      console.log("Usuário deslogado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao deslogar:", error);
       throw error;
     }
   }
