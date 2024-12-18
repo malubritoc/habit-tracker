@@ -5,4 +5,5 @@ export interface Habit {
     name: string;
     frequency: number;
     days: DayOfWeek[];
+    user_id: string;
 }

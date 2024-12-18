@@ -4,6 +4,7 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
+  useContext,
   useEffect,
   useState,
 } from "react";
@@ -12,8 +13,10 @@ import { useToast } from "@/components/hooks/use-toast";
 import {
   createDailyRecordIfNotExists,
   getAllHabits,
-  getTodayRecords,
+  // getTodayRecords,
+  getTodayRecordsByUserId,
 } from "@/services/firebase";
+import { UserContext } from "./UserProvider";
 
 interface RecordsContextProps {
   records: Record[] | null;
@@ -26,6 +29,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<Record[] | null>(null);
   const [updateRecords, setUpdateRecords] = useState(false);
   const { toast } = useToast();
+  const { user } = useContext(UserContext);
 
   async function getData() {
     try {
@@ -39,14 +43,15 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
           await createDailyRecordIfNotExists(habit, "records");
         }
       }
+      if (user) {
+        const recordsResponse = await getTodayRecordsByUserId(user?.id);
 
-      const recordsResponse = await getTodayRecords();
-
-      recordsResponse.sort((a: Record, b: Record) => {
-        return Number(a.done) - Number(b.done);
-      });
-      // console.log(recordsResponse);
-      setRecords(recordsResponse);
+        recordsResponse?.sort((a: Record, b: Record) => {
+          return Number(a.done) - Number(b.done);
+        });
+        // console.log(recordsResponse);
+        setRecords(recordsResponse);
+      }
     } catch (error) {
       console.error(error);
       toast({

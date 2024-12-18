@@ -58,8 +58,24 @@ export async function getAllHabits() {
       return data;
     });
   }
+  
+  export async function getHabitsByUserId(user_id: string) {
+    const q = query(habitsCollectionRef, where("user_id", "==", user_id));
+    const querySnapshot = await getDocs(q);
+  
+    if (!querySnapshot.empty) {
+      // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
+      let data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      return data;
+    } else {
+      return null;
+    }
+  }
 
-export async function createHabit(collectionName: string, habit: { name: string; frequency: number; days: DayOfWeek[]; done: boolean; }) {
+export async function createHabit(collectionName: string, habit: { name: string; frequency: number; days: DayOfWeek[]; done: boolean; user_id: string; }) {
     try {
       const docRef = await addDoc(collection(db, collectionName), habit);
       console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
@@ -112,10 +128,12 @@ export async function createHabit(collectionName: string, habit: { name: string;
             name: habit.name,
             frequency: habit.frequency,
             days: habit.days,
+            user_id: habit.user_id,
         },
         created_at: todayDate, // Formato YYYY-MM-DD
         done: false,
         habit_id: habit.id,
+        user_id: habit.user_id,
       };
   
       const docRef = await addDoc(collection(db, "records"), newRecord)
@@ -140,6 +158,22 @@ export async function createHabit(collectionName: string, habit: { name: string;
       });
       return data;
     });
+  }
+
+  export async function getTodayRecordsByUserId(user_id: string) {
+    const q = query(recordsCollectionRef, where("user_id", "==", user_id));
+    const querySnapshot = await getDocs(q);
+  
+    if (!querySnapshot.empty) {
+      // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
+      let data: any[] = [];
+      querySnapshot.forEach((doc) => {
+        data.push(doc.data());
+      });
+      return data;
+    } else {
+      return null;
+    }
   }
 
   export async function updateHabitRecordStatusFB(collectionName: string, habitRecordId: string, done: boolean) {
