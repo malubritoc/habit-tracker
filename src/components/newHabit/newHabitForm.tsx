@@ -23,7 +23,6 @@ import { Checkbox } from "../ui/checkbox";
 import { createDailyRecordIfNotExists, createHabit } from "@/services/firebase";
 import { DayOfWeek } from "@/types/daysOfTheWeek";
 import { RecordsContext } from "@/contexts/RecordsProvider";
-import { Record } from "@/types/records";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Formato de conteúdo inválido.").max(24),
@@ -51,7 +50,7 @@ export function NewHabitForm({
     { title: "Domingo", value: "sun" as DayOfWeek },
   ];
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
-  const { setRecords } = useContext(RecordsContext);
+  const { setUpdateRecords } = useContext(RecordsContext);
 
   const {
     register,
@@ -94,17 +93,7 @@ export function NewHabitForm({
         .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {
           if (record) {
-            setRecords((prev) => {
-              if (!prev) return [];
-
-              const updatedRecords = [...prev, record];
-              updatedRecords.sort(
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                (a: any, b: any) => Number(a.done) - Number(b.done)
-              );
-
-              return updatedRecords;
-            }); // Atualiza a lista de registros
+            setUpdateRecords(true);
           }
         });
       setLoading(false);
