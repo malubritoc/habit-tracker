@@ -45,16 +45,13 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
         }
       }
 
-      console.log("user", user_id);
-      if (user_id) {
-        const recordsResponse = await getTodayRecordsByUserId(user_id);
+      const recordsResponse = await getTodayRecordsByUserId(user_id);
 
-        recordsResponse?.sort((a: Record, b: Record) => {
-          return Number(a.done) - Number(b.done);
-        });
+      recordsResponse?.sort((a: Record, b: Record) => {
+        return Number(a.done) - Number(b.done);
+      });
 
-        setRecords(recordsResponse);
-      }
+      setRecords(recordsResponse);
     } catch (error) {
       console.error(error);
       toast({
