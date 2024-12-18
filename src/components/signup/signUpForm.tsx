@@ -45,7 +45,7 @@ export function SignUpForm() {
   const handleSignUp = async (data: SignUpFormInputs) => {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
 
       if (password !== confirmPassword) {
         setError("confirmPassword", {
@@ -61,6 +61,12 @@ export function SignUpForm() {
         password: data.password,
         name: data.name,
       }).then(() => {
+        toast({
+          variant: "success",
+          title: "Usuário registrado com sucesso",
+          description:
+            "Seja bem vindo ao HabitTracker! Efetue o seu login com as credenciais cadastradas para começar.",
+        });
         setLoading(false);
         router.push("/");
       });
