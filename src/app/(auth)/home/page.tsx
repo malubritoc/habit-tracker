@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@/components/ui/skeleton";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
 import { updateHabitRecordStatusFB } from "@/services/firebase";
@@ -7,12 +8,16 @@ import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 export default function HomePage() {
-  const { records, setRecords } = useContext(RecordsContext);
+  const { records, setRecords, loading } = useContext(RecordsContext);
   const { user } = useContext(UserContext);
   const today = formatDate(new Date().toISOString().split("T")[0]);
+
+  useEffect(() => {
+    console.log("Records: ", records?.length);
+  }, [records]);
 
   async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
     try {
@@ -50,35 +55,60 @@ export default function HomePage() {
         </h4>
       </div>
       <div className="grid md:grid-cols-6 md:gap-8 grid-cols-2 gap-4 self-center">
-        {records?.map((record, idx) => {
-          return (
-            <div
-              onClick={() => updateHabitRecordStatus(record.id, !record.done)}
-              data-done={record.done}
-              className={clsx(
-                "flex flex-col justify-between",
-                "w-[170px] h-[170px]",
-                "p-4 rounded-2xl",
-                "data-[done=true]:bg-light-turquoise bg-light-orange",
-                "font-bold text-xl data-[done=true]:text-dark-turquoise text-baby-yellow",
-                "cursor-pointer"
-              )}
-              key={idx}
-            >
-              <p className="max-w-[90%]">{record.habit.name}</p>
-              {record.done ? (
-                <div className="w-full flex justify-end">
-                  <Check size={24} color="#2c6b74" />
+        {!loading
+          ? records?.map((record, idx) => {
+              return (
+                <div
+                  onClick={() =>
+                    updateHabitRecordStatus(record.id, !record.done)
+                  }
+                  data-done={record.done}
+                  className={clsx(
+                    "flex flex-col justify-between",
+                    "w-[170px] h-[170px]",
+                    "p-4 rounded-2xl",
+                    "data-[done=true]:bg-light-turquoise bg-light-orange",
+                    "font-bold text-xl data-[done=true]:text-dark-turquoise text-baby-yellow",
+                    "cursor-pointer"
+                  )}
+                  key={idx}
+                >
+                  <p className="max-w-[90%]">{record.habit.name}</p>
+                  {record.done ? (
+                    <div className="w-full flex justify-end">
+                      <Check size={24} color="#2c6b74" />
+                    </div>
+                  ) : (
+                    <div className="w-full flex justify-end">
+                      <div className="w-3 h-3 bg-baby-yellow rounded-full" />
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <div className="w-full flex justify-end">
-                  <div className="w-3 h-3 bg-baby-yellow rounded-full" />
+              );
+            })
+          : [...Array(18)].map((_, idx) => {
+              return (
+                <div key={idx}>
+                  <Skeleton
+                    key={idx}
+                    className="w-[170px] h-[170px] rounded-2xl"
+                  />
                 </div>
-              )}
-            </div>
-          );
-        })}
+              );
+            })}
       </div>
+      {records?.length === 0 && (
+        <div className="flex flex-col items center self-center text-center">
+          <p className="text-lg text-dark-blue">
+            Você não possui hábitos programados para hoje!
+          </p>
+          <p className="text-sm items-center text-default-gray/70">
+            Adicione novos hábitos clicando no ícone{" "}
+            <span className="text-dark-blue font-bold">+</span> do menu
+            superior.
+          </p>
+        </div>
+      )}
     </div>
   );
 }

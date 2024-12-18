@@ -23,11 +23,14 @@ interface RecordsContextProps {
   records: Record[] | null;
   setRecords: Dispatch<SetStateAction<Record[] | null>>;
   setUpdateRecords: Dispatch<SetStateAction<boolean>>;
+  loading: boolean;
 }
 export const RecordsContext = createContext({} as RecordsContextProps);
 
 export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<Record[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  // const [empty, setEmpty] = useState(false);
   const [updateRecords, setUpdateRecords] = useState(false);
   const { toast } = useToast();
   const user_id = parseCookies()["habit-tracker-user"];
@@ -52,6 +55,11 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
       });
 
       setRecords(recordsResponse);
+
+      if (!recordsResponse || recordsResponse.length === 0) {
+        setRecords([]);
+      }
+      setLoading(false);
     } catch (error) {
       console.error(error);
       toast({
@@ -74,7 +82,9 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
   }, [updateRecords]);
 
   return (
-    <RecordsContext.Provider value={{ records, setRecords, setUpdateRecords }}>
+    <RecordsContext.Provider
+      value={{ records, setRecords, setUpdateRecords, loading }}
+    >
       {children}
     </RecordsContext.Provider>
   );
