@@ -83,7 +83,7 @@ export function NewHabitForm({
   async function handleCreateNewHabit(data: newHabitFormInputs) {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
 
       if (!user) return;
 
@@ -123,7 +123,7 @@ export function NewHabitForm({
     } catch (error) {
       console.log(error);
       toast({
-        variant: "default",
+        variant: "destructive",
         title: "Erro ao criar novo hábito",
         description:
           "Ocorreu um erro ao criar seu novo hábito, tente novamente.",

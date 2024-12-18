@@ -40,7 +40,7 @@ export function SignInForm() {
   const handleSignIn = async (data: SignInFormInputs) => {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
 
       await signIn({
         email: data.email,

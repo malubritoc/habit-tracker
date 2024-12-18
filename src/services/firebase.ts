@@ -22,7 +22,7 @@ import {
   createUserWithEmailAndPassword, 
   getAuth, 
   signInWithEmailAndPassword, 
-  signOut
+  signOut,
 } from "firebase/auth";
 import { destroyCookie, setCookie } from "nookies";
 // Your web app's Firebase configuration
@@ -78,7 +78,7 @@ export async function getAllHabits() {
 export async function createHabit(collectionName: string, habit: { name: string; frequency: number; days: DayOfWeek[]; done: boolean; user_id: string; description: string }) {
     try {
       const docRef = await addDoc(collection(db, collectionName), habit);
-      console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
+      // console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
       return {
         ...habit,
         id: docRef.id,
@@ -172,7 +172,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
         data.push({...doc.data(), id: doc.id});
       });
 
-      console.log(data);
+      // console.log(data);
       return data;
     } else {
       return null;
@@ -193,8 +193,8 @@ export async function createHabit(collectionName: string, habit: { name: string;
   export async function createUser(collectionName: string, user: { id: string, name: string; email: string; }) {
     try {
       const docRef = await addDoc(collection(db, collectionName), user);
-      console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
-      return user; 
+      // console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
+      return {user, docId: docRef.id}; 
     } catch (error) {
       console.error("Erro ao criar hábito: ", error);
       throw error;
@@ -209,11 +209,30 @@ export async function createHabit(collectionName: string, habit: { name: string;
       // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
       let data: any[] = [];
       querySnapshot.forEach((doc) => {
-        data.push(doc.data());
+        data.push({...doc.data(), docId: doc.id});
       });
       return data;
     } else {
       return null;
+    }
+  }
+
+  export async function updateDBUser({ user_id, new_name} : {user_id: string, new_name: string}) {
+    try {
+      const user = await getUserById(user_id);
+
+      if(!user) return;
+      
+      if(user) {
+        // console.log(user);
+        const userRef = doc(db, "users", user[0].docId);
+        await updateDoc(userRef, { name: new_name });
+        // console.log(`User ${user_id} atualizado com sucesso!`);
+      }
+
+    } catch (error) {
+      console.error("Erro ao atualizar o user: ", error);
+      throw error;
     }
   }
 
@@ -238,7 +257,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
 
       await createUser("users", {id: user.uid, name, email});
   
-      console.log("Usuário registrado com sucesso!");
+      // console.log("Usuário registrado com sucesso!");
     } catch (error) {
       console.error("Erro ao registrar usuário:", error);
       throw error;
@@ -260,7 +279,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
       const userDoc = await getDoc(doc(db, "Users", user.uid));
   
       if (userDoc.exists()) {
-        console.log("Dados do usuário:", {...userDoc.data(), uid: user.uid});
+        // console.log("Dados do usuário:", {...userDoc.data(), uid: user.uid});
         setCookie(null, 'habit-tracker-user', user.uid, {
           maxAge: 30 * 24 * 60 * 60
         });
@@ -279,7 +298,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
     try {
       destroyCookie(null, 'habit-tracker-user');
       await signOut(auth);
-      console.log("Usuário deslogado com sucesso!");
+      // console.log("Usuário deslogado com sucesso!");
     } catch (error) {
       console.error("Erro ao deslogar:", error);
       throw error;

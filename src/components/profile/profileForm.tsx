@@ -9,7 +9,9 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { useEffect, useState } from "react";
+import { useContext, useState } from "react";
+import { UserContext } from "@/contexts/UserProvider";
+import { updateDBUser } from "@/services/firebase";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome inválido."),
@@ -22,37 +24,53 @@ export function ProfileForm() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
+  const { user, setUser } = useContext(UserContext);
 
   const {
     register,
     handleSubmit,
+    setValue,
     // watch,
     // setError,
     formState: { errors },
   } = useForm<profileInputs>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "Maria Luisa",
-      email: "malu@example.com",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
     },
   });
 
-  useEffect(() => {
-    console.log(edit);
-  }, [edit]);
-
-  function handleEditProfile(data: profileInputs) {
+  async function handleEditProfile(data: profileInputs) {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
+
+      if (user) {
+        // console.log(user?.id);
+        await updateDBUser({
+          new_name: data.name,
+          user_id: user?.id,
+        }).then(() => {
+          setUser({ ...user, name: data.name });
+          toast({
+            variant: "success",
+            title: "Perfil editado com sucesso",
+            description: "Seu perfil foi editado com sucesso.",
+          });
+        });
+      }
+
       setLoading(false);
     } catch (error) {
+      if (user) {
+        setValue("name", user?.name);
+      }
       console.log(error);
       toast({
-        variant: "default",
-        title: "Erro ao criar novo hábito",
-        description:
-          "Ocorreu um erro ao criar seu novo hábito, tente novamente.",
+        variant: "destructive",
+        title: "Erro ao editar perfil",
+        description: "Ocorreu um erro ao editar seu perfil, tente novamente.",
       });
       setLoading(false);
     }
@@ -65,6 +83,17 @@ export function ProfileForm() {
       onSubmit={handleSubmit(handleEditProfile)}
     >
       <div className="div-field">
+        <Label>E-mail</Label>
+        <Input
+          {...register("email")}
+          placeholder="Digite aqui o título do seu hábito"
+          disabled
+        />
+        {errors.email && (
+          <span className="error-message">{errors.email.message}</span>
+        )}
+      </div>
+      <div className="div-field">
         <Label>Nome</Label>
         <Input
           {...register("name")}
@@ -73,17 +102,6 @@ export function ProfileForm() {
         />
         {errors.name && (
           <span className="error-message">{errors.name.message}</span>
-        )}
-      </div>
-      <div className="div-field">
-        <Label>E-mail</Label>
-        <Input
-          {...register("email")}
-          placeholder="Digite aqui o título do seu hábito"
-          disabled={!edit}
-        />
-        {errors.email && (
-          <span className="error-message">{errors.email.message}</span>
         )}
       </div>
       {edit && (
