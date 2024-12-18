@@ -168,7 +168,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
       // eslint-disable-next-line prefer-const, @typescript-eslint/no-explicit-any
       let data: any[] = [];
       querySnapshot.forEach((doc) => {
-        data.push(doc.data());
+        data.push({...doc.data(), id: doc.id});
       });
 
       console.log(data);
