@@ -5,7 +5,7 @@ import { UserProvider } from "@/contexts/UserProvider";
 import { redirect } from "next/navigation";
 import { parseCookies } from "nookies";
 
-export default function PrivatePagesLayout({
+export default function AuthenticatedLayout({
   children,
 }: {
   children: React.ReactNode;
