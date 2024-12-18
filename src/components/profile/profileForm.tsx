@@ -24,7 +24,7 @@ export function ProfileForm() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
-  const { user } = useContext(UserContext);
+  const { user, setUser } = useContext(UserContext);
 
   const {
     register,
@@ -56,6 +56,7 @@ export function ProfileForm() {
           new_name: data.name,
           user_id: user?.id,
         }).then(() => {
+          setUser({ ...user, name: data.name });
           toast({
             variant: "success",
             title: "Perfil editado com sucesso",
