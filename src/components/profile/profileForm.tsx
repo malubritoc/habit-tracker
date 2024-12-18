@@ -9,7 +9,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { UserContext } from "@/contexts/UserProvider";
 import { updateDBUser } from "@/services/firebase";
 
@@ -41,17 +41,13 @@ export function ProfileForm() {
     },
   });
 
-  useEffect(() => {
-    console.log(edit);
-  }, [edit]);
-
   async function handleEditProfile(data: profileInputs) {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
 
       if (user) {
-        console.log(user?.id);
+        // console.log(user?.id);
         await updateDBUser({
           new_name: data.name,
           user_id: user?.id,

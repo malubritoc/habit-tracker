@@ -83,7 +83,7 @@ export function NewHabitForm({
   async function handleCreateNewHabit(data: newHabitFormInputs) {
     setLoading(true);
     try {
-      console.log(data);
+      // console.log(data);
 
       if (!user) return;
 
