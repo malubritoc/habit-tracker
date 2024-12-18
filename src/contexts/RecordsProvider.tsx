@@ -18,11 +18,13 @@ import {
 interface RecordsContextProps {
   records: Record[] | null;
   setRecords: Dispatch<SetStateAction<Record[] | null>>;
+  setUpdateRecords: Dispatch<SetStateAction<boolean>>;
 }
 export const RecordsContext = createContext({} as RecordsContextProps);
 
 export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<Record[] | null>(null);
+  const [updateRecords, setUpdateRecords] = useState(false);
   const { toast } = useToast();
 
   async function getData() {
@@ -59,8 +61,15 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
     getData();
   }, []);
 
+  useEffect(() => {
+    if (updateRecords) {
+      getData();
+      setUpdateRecords(false);
+    }
+  }, [updateRecords]);
+
   return (
-    <RecordsContext.Provider value={{ records, setRecords }}>
+    <RecordsContext.Provider value={{ records, setRecords, setUpdateRecords }}>
       {children}
     </RecordsContext.Provider>
   );
