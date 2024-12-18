@@ -170,6 +170,8 @@ export async function createHabit(collectionName: string, habit: { name: string;
       querySnapshot.forEach((doc) => {
         data.push(doc.data());
       });
+
+      console.log(data);
       return data;
     } else {
       return null;

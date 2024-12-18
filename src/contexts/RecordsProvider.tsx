@@ -4,7 +4,7 @@ import {
   createContext,
   Dispatch,
   SetStateAction,
-  useContext,
+  // useContext,
   useEffect,
   useState,
 } from "react";
@@ -16,7 +16,8 @@ import {
   // getTodayRecords,
   getTodayRecordsByUserId,
 } from "@/services/firebase";
-import { UserContext } from "./UserProvider";
+// import { UserContext } from "./UserProvider";
+import { parseCookies } from "nookies";
 
 interface RecordsContextProps {
   records: Record[] | null;
@@ -29,7 +30,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<Record[] | null>(null);
   const [updateRecords, setUpdateRecords] = useState(false);
   const { toast } = useToast();
-  const { user } = useContext(UserContext);
+  const user_id = parseCookies()["habit-tracker-user"];
 
   async function getData() {
     try {
@@ -43,13 +44,15 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
           await createDailyRecordIfNotExists(habit, "records");
         }
       }
-      if (user) {
-        const recordsResponse = await getTodayRecordsByUserId(user?.id);
+
+      console.log("user", user_id);
+      if (user_id) {
+        const recordsResponse = await getTodayRecordsByUserId(user_id);
 
         recordsResponse?.sort((a: Record, b: Record) => {
           return Number(a.done) - Number(b.done);
         });
-        // console.log(recordsResponse);
+
         setRecords(recordsResponse);
       }
     } catch (error) {

@@ -23,6 +23,7 @@ import { Checkbox } from "../ui/checkbox";
 import { createDailyRecordIfNotExists, createHabit } from "@/services/firebase";
 import { DayOfWeek } from "@/types/daysOfTheWeek";
 import { RecordsContext } from "@/contexts/RecordsProvider";
+import { UserContext } from "@/contexts/UserProvider";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Formato de conteúdo inválido.").max(24),
@@ -51,6 +52,7 @@ export function NewHabitForm({
   ];
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
   const { setUpdateRecords } = useContext(RecordsContext);
+  const { user } = useContext(UserContext);
 
   const {
     register,
@@ -81,6 +83,9 @@ export function NewHabitForm({
     setLoading(true);
     try {
       console.log(data);
+
+      if (!user) return;
+
       await createHabit("habits", {
         name: data.title,
         frequency: parseInt(data.frequency),
@@ -90,6 +95,7 @@ export function NewHabitForm({
             : selectedDays,
         done: false,
         description: data.description,
+        user_id: user.id,
       })
         .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {
