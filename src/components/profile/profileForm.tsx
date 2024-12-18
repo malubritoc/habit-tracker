@@ -9,7 +9,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { UserContext } from "@/contexts/UserProvider";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome inválido."),
@@ -22,6 +23,7 @@ export function ProfileForm() {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
+  const { user } = useContext(UserContext);
 
   const {
     register,
@@ -32,8 +34,8 @@ export function ProfileForm() {
   } = useForm<profileInputs>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: "Maria Luisa",
-      email: "malu@example.com",
+      name: user?.name ?? "",
+      email: user?.email ?? "",
     },
   });
 
