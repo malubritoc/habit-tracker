@@ -129,6 +129,7 @@ export async function createHabit(collectionName: string, habit: { name: string;
             frequency: habit.frequency,
             days: habit.days,
             user_id: habit.user_id,
+            description: habit.description,
         },
         created_at: todayDate, // Formato YYYY-MM-DD
         done: false,
