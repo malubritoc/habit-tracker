@@ -12,6 +12,8 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { toast } from "../hooks/use-toast";
+import { signIn } from "@/services/firebase";
+import { useRouter } from "next/navigation";
 
 const signInFormSchema = z.object({
   email: z.string().email("E-mail inválido."),
@@ -22,6 +24,7 @@ const signInFormSchema = z.object({
 type SignInFormInputs = z.infer<typeof signInFormSchema>;
 
 export function SignInForm() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -38,6 +41,14 @@ export function SignInForm() {
     setLoading(true);
     try {
       console.log(data);
+
+      await signIn({
+        email: data.email,
+        password: data.password,
+      }).then(() => {
+        setLoading(false);
+        router.push("/home");
+      });
     } catch (error) {
       console.error(error);
       toast({

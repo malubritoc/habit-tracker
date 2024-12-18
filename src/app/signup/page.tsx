@@ -5,12 +5,27 @@ import woman from "@/assets/woman.png";
 import Image from "next/image";
 import clsx from "clsx";
 import { Container } from "@/components/container";
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { SignUpForm } from "@/components/signup/signUpForm";
+import { useEffect, useState } from "react";
+import { parseCookies } from "nookies";
 
 export default function SignUpPage() {
   const router = useRouter();
-  return (
+  const [loading, setLoading] = useState(true);
+  const user_id = parseCookies()["habit-tracker-user"];
+
+  useEffect(() => {
+    if (user_id) {
+      redirect("/home");
+    } else {
+      setLoading(false);
+    }
+  }, []);
+
+  return loading ? (
+    <></>
+  ) : (
     <div className="w-full h-full flex items-center justify-center gap-8 bg-white">
       <div className="h-full w-full relative flex flex-col items-center gap-16 px-24 py-12">
         <Image src={logo} alt="Logo BuzzCreators" width={120} />
