@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import { RecordsProvider } from "@/contexts/RecordsProvider";
 
 const dm_sans = DM_Sans({
   subsets: ["latin"],
@@ -22,13 +21,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={dm_sans.className}>
-        <RecordsProvider>
-          <main className="w-screen min-h-screen flex justify-center">
-            <div className="w-full flex gap-0 items-start justify-center overflow-hidden shadow-custom">
-              {children}
-            </div>
-          </main>
-        </RecordsProvider>
+        <main className="w-screen min-h-screen flex justify-center">
+          <div className="w-full flex gap-0 items-start justify-center overflow-hidden shadow-custom">
+            {children}
+          </div>
+        </main>
         <Toaster />
       </body>
     </html>

@@ -8,8 +8,9 @@ import {
   useState,
 } from "react";
 import { useToast } from "@/components/hooks/use-toast";
-import { getAllHabits } from "@/services/firebase";
+import { getHabitsByUserId } from "@/services/firebase";
 import { Habit } from "@/types/habit";
+import { parseCookies } from "nookies";
 
 interface HabitsContextProps {
   habits: Habit[] | null;
@@ -20,11 +21,12 @@ export const HabitsContext = createContext({} as HabitsContextProps);
 export function HabitsProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[] | null>(null);
   const { toast } = useToast();
+  const user_id = parseCookies()["habit-tracker-user"];
 
   async function getData() {
     try {
       // Obtém todos os hábitos
-      const habitsResponse = await getAllHabits();
+      const habitsResponse = await getHabitsByUserId(user_id);
 
       setHabits(habitsResponse);
     } catch (error) {

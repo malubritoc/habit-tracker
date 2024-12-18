@@ -1,5 +1,6 @@
 "use client";
 
+import { RecordsProvider } from "@/contexts/RecordsProvider";
 import { UserProvider } from "@/contexts/UserProvider";
 import { redirect } from "next/navigation";
 import { parseCookies } from "nookies";
@@ -11,11 +12,13 @@ export default function PrivatePagesLayout({
 }) {
   const user_id = parseCookies()["habit-tracker-user"];
 
-  console.log("user_id", user_id);
-
   if (!user_id) {
     redirect("/");
   }
 
-  return <UserProvider>{children}</UserProvider>;
+  return (
+    <UserProvider>
+      <RecordsProvider>{children}</RecordsProvider>
+    </UserProvider>
+  );
 }
