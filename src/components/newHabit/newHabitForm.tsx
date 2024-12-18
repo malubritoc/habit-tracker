@@ -114,6 +114,12 @@ export function NewHabitForm({
         });
       setLoading(false);
       setOpen(false);
+      toast({
+        variant: "success",
+        title: "Hábito criado com sucesso",
+        description:
+          "Seu novo hábito foi criado com sucesso. Ele será adicionado à sua lista de hábitos diários conforme a frequência e dias selecionados.",
+      });
     } catch (error) {
       console.log(error);
       toast({
@@ -162,7 +168,7 @@ export function NewHabitForm({
           render={({ field: { onChange, value } }) => (
             <Select value={value} onValueChange={onChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione o formato" />
+                <SelectValue placeholder="Selecione a frequência" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="7">Diário</SelectItem>
