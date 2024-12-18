@@ -1,33 +1,39 @@
 "use client";
 
-import { getAllHabits, updateHabitStatusFB } from "@/services/firebase";
-import { Habit } from "@/types/habit";
+import { RecordsContext } from "@/contexts/RecordsProvider";
+import { updateHabitRecordStatusFB } from "@/services/firebase";
+import { Record } from "@/types/records";
+import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 
 export default function HomePage() {
-  const [habits, setHabits] = useState<Habit[]>([]);
+  const { records, setRecords } = useContext(RecordsContext);
+  const today = formatDate(new Date().toISOString().split("T")[0]);
 
-  async function fetchHabits() {
+  async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
     try {
-      const response = await getAllHabits();
-      response.sort((a: Habit, b: Habit) => Number(a.done) - Number(b.done));
-      setHabits(response);
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  useEffect(() => {
-    fetchHabits();
-  }, []);
-
-  async function updateHabitStatus(habitId: string, done: boolean) {
-    try {
-      await updateHabitStatusFB("habits", habitId, done);
-      fetchHabits();
+      await updateHabitRecordStatusFB("records", habitRecordId, done);
       // console.log(`Hábito ${habitId} atualizado com sucesso!`);
+      setRecords((prev) => {
+        if (!prev) return [];
+
+        // Atualiza o registro no array
+        const updatedRecords = prev.map((record) => {
+          if (record.id === habitRecordId) {
+            return { ...record, done };
+          }
+          return record;
+        });
+
+        // Ordena os registros para que 'done = false' apareçam primeiro
+        updatedRecords.sort(
+          (a: Record, b: Record) => Number(a.done) - Number(b.done)
+        );
+
+        return updatedRecords;
+      });
     } catch (error) {
       console.error("Erro ao atualizar o hábito: ", error);
     }
@@ -38,16 +44,15 @@ export default function HomePage() {
       <div className="flex flex-col gap-0">
         <h1 className="text-3xl font-bold">Olá, Maria!</h1>
         <h4 className="text-md text-default-gray">
-          Hoje é dia <strong>09 de dezembro de 2024</strong>. O que você fez
-          hoje?
+          Hoje é dia <strong>{today}</strong>. O que você fez hoje?
         </h4>
       </div>
-      <div className="grid grid-cols-6 gap-8">
-        {habits.map((habit, idx) => {
+      <div className="grid md:grid-cols-6 md:gap-8 grid-cols-2 gap-4 self-center">
+        {records?.map((record, idx) => {
           return (
             <div
-              onClick={() => updateHabitStatus(habit.id, !habit.done)}
-              data-done={habit.done}
+              onClick={() => updateHabitRecordStatus(record.id, !record.done)}
+              data-done={record.done}
               className={clsx(
                 "flex flex-col justify-between",
                 "w-[170px] h-[170px]",
@@ -58,8 +63,8 @@ export default function HomePage() {
               )}
               key={idx}
             >
-              <p className="max-w-[90%]">{habit.name}</p>
-              {habit.done ? (
+              <p className="max-w-[90%]">{record.habit.name}</p>
+              {record.done ? (
                 <div className="w-full flex justify-end">
                   <Check size={24} color="#2c6b74" />
                 </div>

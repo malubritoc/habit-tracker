@@ -39,7 +39,7 @@ export function Header() {
     <div
       className={clsx(
         "flex items-center justify-between",
-        "px-16 py-4",
+        "md:px-16 py-4 px-4",
         "bg-dark-blue"
       )}
     >

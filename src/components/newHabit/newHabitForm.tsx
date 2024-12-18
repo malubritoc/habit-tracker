@@ -6,7 +6,6 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-// import clsx from "clsx";
 import {
   Select,
   SelectContent,
@@ -15,15 +14,16 @@ import {
   SelectValue,
 } from "../ui/select";
 import { Textarea } from "../ui/textarea";
-// import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
-import { createHabit } from "@/services/firebase";
+import { createDailyRecordIfNotExists, createHabit } from "@/services/firebase";
 import { DayOfWeek } from "@/types/daysOfTheWeek";
+import { RecordsContext } from "@/contexts/RecordsProvider";
+import { Record } from "@/types/records";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Formato de conteúdo inválido.").max(24),
@@ -51,6 +51,7 @@ export function NewHabitForm({
     { title: "Domingo", value: "sun" as DayOfWeek },
   ];
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
+  const { setRecords } = useContext(RecordsContext);
 
   const {
     register,
@@ -84,9 +85,28 @@ export function NewHabitForm({
       await createHabit("habits", {
         name: data.title,
         frequency: parseInt(data.frequency),
-        days: selectedDays,
+        days:
+          frequency == "7"
+            ? ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+            : selectedDays,
         done: false,
-      });
+      })
+        .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
+        .then((record) => {
+          if (record) {
+            setRecords((prev) => {
+              if (!prev) return [];
+
+              const updatedRecords = [...prev, record];
+              updatedRecords.sort(
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                (a: any, b: any) => Number(a.done) - Number(b.done)
+              );
+
+              return updatedRecords;
+            }); // Atualiza a lista de registros
+          }
+        });
       setLoading(false);
       setOpen(false);
     } catch (error) {
