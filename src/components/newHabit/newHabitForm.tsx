@@ -26,7 +26,7 @@ import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
 
 const newHabitFormSchema = z.object({
-  title: z.string().min(1, "Formato de conteúdo inválido.").max(24),
+  title: z.string().min(1, "Título inválido.").max(24),
   description: z.string(),
   frequency: z.string(),
   days: z.array(z.string()).optional(),
@@ -59,13 +59,14 @@ export function NewHabitForm({
     handleSubmit,
     control,
     watch,
-    // setError,
+    setError,
     formState: { errors },
   } = useForm<newHabitFormInputs>({
     resolver: zodResolver(newHabitFormSchema),
     defaultValues: {
       frequency: "7",
     },
+    mode: "onBlur",
   });
 
   const frequency = watch("frequency");
@@ -85,6 +86,14 @@ export function NewHabitForm({
       console.log(data);
 
       if (!user) return;
+
+      if (selectedDays.length > Number(frequency)) {
+        setError("days", {
+          message: "Número de dias selecionados superior à frequência.",
+        });
+        setLoading(false);
+        return;
+      }
 
       await createHabit("habits", {
         name: data.title,
@@ -202,6 +211,9 @@ export function NewHabitForm({
               );
             })}
           </div>
+          {errors.days && (
+            <span className="error-message">{errors.days.message}</span>
+          )}
         </div>
       )}
       <Separator className="mt-4 mb-2" />
