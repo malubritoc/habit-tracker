@@ -89,6 +89,7 @@ export function NewHabitForm({
             ? ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
             : selectedDays,
         done: false,
+        description: data.description,
       })
         .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {

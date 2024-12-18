@@ -75,7 +75,7 @@ export async function getAllHabits() {
     }
   }
 
-export async function createHabit(collectionName: string, habit: { name: string; frequency: number; days: DayOfWeek[]; done: boolean; user_id: string; }) {
+export async function createHabit(collectionName: string, habit: { name: string; frequency: number; days: DayOfWeek[]; done: boolean; user_id: string; description: string }) {
     try {
       const docRef = await addDoc(collection(db, collectionName), habit);
       console.log(`Hábito criado com sucesso! ID: ${docRef.id}`);
