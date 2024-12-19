@@ -8,16 +8,12 @@ import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
 import { Check } from "lucide-react";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 export default function HomePage() {
   const { records, setRecords, loading } = useContext(RecordsContext);
   const { user } = useContext(UserContext);
   const today = formatDate(new Date().toISOString().split("T")[0]);
-
-  useEffect(() => {
-    console.log("Records: ", records?.length);
-  }, [records]);
 
   async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
     try {

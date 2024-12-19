@@ -228,6 +228,7 @@ export function NewHabitForm({
           {loading ? <SpinnerGraySmall /> : "Adicionar hábito"}
         </Button>
         <Button
+          type="button"
           onClick={() => setOpen(false)}
           variant="cancel"
           className="w-full px-6"
