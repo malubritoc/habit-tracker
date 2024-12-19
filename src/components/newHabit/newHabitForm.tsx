@@ -93,6 +93,12 @@ export function NewHabitForm({
         });
         setLoading(false);
         return;
+      } else if (selectedDays.length < Number(frequency)) {
+        setError("days", {
+          message: "Número de dias selecionados inferior à frequência.",
+        });
+        setLoading(false);
+        return;
       }
 
       await createHabit("habits", {
