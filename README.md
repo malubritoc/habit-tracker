@@ -65,21 +65,21 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 ## Uso da Aplicação
 
-- **Páginas de Sign Up**:
+### Páginas de Sign In:
 
-#### Caso você não possua uma conta
+##### Caso você não possua uma conta
 
 1. Acesse "/" e clique na opcão "Criar uma conta agora";
 
 2. Você será redirecionado para a página de sign up ("/signup");
 
-#### Caso você já possua uma conta
+##### Caso você já possua uma conta
 
 1. Acesse "/" e preencha o formulário com suas credenciais E-mail e Senha;
 
 2. Clique em "Entrar". Se tudo der certo, você será redirecionado para o ambiente autenticado da página inicial ("/home").
 
-- **Página de SignUp**:
+### Página de SignUp:
 
 1. Acesse a página de sign up clicando em "Criar uma conta agora" da página "/";
 
@@ -88,9 +88,9 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 3. Clique em "Entrar". Se tudo der certo, você será redirecionado para a página de sign in ("/").
 
-- **Página de Início**:
+### Página de Início
 
-#### Caso possua hábitos
+##### Caso possua hábitos
 
 1. Acesse a página de início clicando no ícone de casa do menu superior;
 
@@ -102,7 +102,7 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 5. Ao ser registrado, o card de hábito deverá mudar da cor vermelha para verde.
 
-- **Página de Perfil**:
+### Página de Perfil:
 
 1. Acesse a página de perfil clicando na opção "Meu Perfil" do menu dropdow renderizado ao clicar no ícone de usuário do menu superior;
 
@@ -114,23 +114,23 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 5. Altere os dados desejados e clique em "Salvar Alterações".
 
-- **Página de Progressos**:
+### Página de Progressos:
 
 1. Acesse a página de perfil clicando na opção "Meu Progresso" do menu dropdow renderizado ao clicar no ícone de usuário do menu superior;
 
 2. Defina o escopo dos resultados que deseja visualizar clicando nas opcões (Por Hábito ou Geral) localizadas logo abaixo do título;
 
-#### Caso selecione a opção "Por Hábito"
+##### Caso selecione a opção "Por Hábito"
 
 3. Clique na barra com o nome do hábito desejado;
 
 4. Se tudo der certo, o accordion se abrirá e você poderá visualizar os detalhes e métricas (esta última, pendente até o momento) do hábito desejado.
 
-#### Caso selecione "Geral"
+##### Caso selecione "Geral"
 
 3. Visualize os detalhes e métricas (esta última, pendente até o momento) gerais, sobre todos os hábitos.
 
-- **Modal de Adição de Hábito**: Modal para adicionar novos hábitos
+### Modal de Adição de Hábito:
 
 1. Clique no ícone de Mais (+) no menu superior;
 
@@ -138,7 +138,7 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 3. Preencha o formulário com os dados do hábito que deseja monitorar (Nome e Descrição) e selecione uma opção de frequência;
 
-#### Caso selecione uma frequência diferente de "Diário"
+##### Caso selecione uma frequência diferente de "Diário"
 
 4. Aparecerá uma nova seção no formulário para seleção dos dias que deseja programar o hábito a ser cadastrado;
 
@@ -148,11 +148,11 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 7. Você já poderá visualizar o novo hábito no accordion da tela de "Meu Progresso" e caso ele esteja programado para o dia corrente, já deverá poder visualizá-lo na tela inicial
 
-- **Log Out**
+### Log Out:
 
 1. Faça o log ou clicando na opção "Sair" do menu dropdow renderizado ao clicar no ícone de usuário do menu superior;
 
-- **Feedbacks do usuário**
+### Feedbacks do usuário:
 
 1. Os feedbacks de sucesso e erro das requisições para o usuário acontecem por meio de toasts;
 
