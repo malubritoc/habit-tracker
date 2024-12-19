@@ -23,6 +23,10 @@ Para visualizar a aplicação em produção, acesse:
 - **Zod**: Utilizada para criar esquemas de formulários.
 - **Lucide**: Utilizada como fonte de ícones svg.
 
+### UI
+
+- **shadcn**: Coleção de componentes reutilizáveis utilizada para criar componentes.
+
 ## Funcionalidades
 
 - **Páginas de Sign In**: Página para login de usuários.
@@ -162,15 +166,11 @@ Certifique-se de ter o Node.js e o npm instalados na sua máquina.
 
 ### Testes de Sign In
 
-Testar solicitações de login
-
 - Solicitar o login sem os campos do formulário preenchidos;
 - Solicitar o login com credenciais aleatórias ou no formato incorrento (ex.: email fora do formato padrão nome@dominio.com);
 - Solicitar o login com credenciais cadastradas (vide Uso da Aplicação).
 
 ### Testes de Sign Up
-
-Testar solicitações de sign up
 
 - Solicitar o sign up sem os campos do formulário preenchidos;
 - Solicitar o sign up com credenciais já existentes;
