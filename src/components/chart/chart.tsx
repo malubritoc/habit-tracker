@@ -60,7 +60,8 @@ const ProgressChart = ({
   const chartInstance = useRef<ChartJS | null>(null);
 
   const getChartData = (type: "bar-stacked" | "line" | "pie") => {
-    const labels = data.map((item) => item.date);
+    const labels =
+      type === "pie" ? ["Concluído", "Perdido"] : data.map((item) => item.date);
     let datasets: any[] = [];
     let options: any = {};
 
@@ -253,9 +254,7 @@ const ProgressChart = ({
 
   return (
     <div
-      className={`w-full ${
-        mini ? "w-1/3" : "w-full"
-      } min-h-[80px] h-[400px] mx-auto`}
+      className={`w-full ${mini ? "w-1/3" : "w-full"} min-h-[80px] h-[300px]`}
     >
       <canvas ref={chartRef}></canvas>
     </div>
