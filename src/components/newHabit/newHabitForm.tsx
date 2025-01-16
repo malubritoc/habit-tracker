@@ -83,8 +83,6 @@ export function NewHabitForm({
   async function handleCreateNewHabit(data: newHabitFormInputs) {
     setLoading(true);
     try {
-      // console.log(data);
-
       if (!user) return;
 
       if (selectedDays.length > Number(frequency)) {
@@ -93,7 +91,10 @@ export function NewHabitForm({
         });
         setLoading(false);
         return;
-      } else if (selectedDays.length < Number(frequency)) {
+      } else if (
+        selectedDays.length &&
+        selectedDays.length < Number(frequency)
+      ) {
         setError("days", {
           message: "Número de dias selecionados inferior à frequência.",
         });
