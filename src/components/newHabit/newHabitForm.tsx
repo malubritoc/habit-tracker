@@ -85,21 +85,20 @@ export function NewHabitForm({
     try {
       if (!user) return;
 
-      if (selectedDays.length > Number(frequency)) {
-        setError("days", {
-          message: "Número de dias selecionados superior à frequência.",
-        });
-        setLoading(false);
-        return;
-      } else if (
-        selectedDays.length &&
-        selectedDays.length < Number(frequency)
-      ) {
-        setError("days", {
-          message: "Número de dias selecionados inferior à frequência.",
-        });
-        setLoading(false);
-        return;
+      if (frequency != "7") {
+        if (selectedDays.length > Number(frequency)) {
+          setError("days", {
+            message: "Número de dias selecionados superior à frequência.",
+          });
+          setLoading(false);
+          return;
+        } else if (selectedDays.length < Number(frequency)) {
+          setError("days", {
+            message: "Número de dias selecionados inferior à frequência.",
+          });
+          setLoading(false);
+          return;
+        }
       }
 
       await createHabit("habits", {
