@@ -8,9 +8,31 @@ import {
 import { HabitsContext } from "@/contexts/HabitsProvider";
 import { translateDay } from "@/utils/translateDay";
 import { Skeleton } from "../ui/skeleton";
+import Chart from "../chart/chart";
+import { generateFakeProgressData } from "@/utils/generateFakeData";
 
 export function ProgressAccordion() {
   const { habits, loading } = useContext(HabitsContext);
+
+  // const lineData = [
+  //   { date: "15/05/2024", completed: 84, remaining: 16 },
+  //   { date: "16/05/2024", completed: 75, remaining: 25 },
+  //   { date: "17/05/2024", completed: 90, remaining: 10 },
+  //   { date: "18/05/2024", completed: 50, remaining: 50 },
+  //   { date: "19/05/2024", completed: 100, remaining: 0 },
+  //   { date: "20/05/2024", completed: 60, remaining: 40 },
+  //   { date: "21/05/2024", completed: 30, remaining: 70 },
+  // ];
+
+  // const pieData = [
+  //   { date: "15/05/2024", completed: 84, remaining: 16 },
+  //   { date: "16/05/2024", completed: 75, remaining: 25 },
+  //   { date: "17/05/2024", completed: 90, remaining: 10 },
+  //   { date: "18/05/2024", completed: 50, remaining: 50 },
+  //   { date: "19/05/2024", completed: 100, remaining: 0 },
+  //   { date: "20/05/2024", completed: 60, remaining: 40 },
+  //   { date: "21/05/2024", completed: 30, remaining: 70 },
+  // ];
 
   return (
     <Accordion type="single" collapsible className="w-full flex flex-col gap-4">
@@ -38,6 +60,40 @@ export function ProgressAccordion() {
                   <p className="text-default-gray text-sm font-medium">
                     Resultados
                   </p>
+                  <div className="block lg:flex lg:gap-4 lg:flex-wrap mt-4">
+                    <div className="lg:w-[45%] w-full">
+                      <h2 className="text-xs text-default-gray mb-4">
+                        Progesso semanal
+                      </h2>
+                      <Chart
+                        data={generateFakeProgressData("weekly")}
+                        chartType="pie"
+                        mini={true}
+                        title="Progresso das tarefas ao longo da semana"
+                      />
+                    </div>
+                    <div className="lg:w-[45%] w-full">
+                      <h2 className="text-xs text-default-gray mb-4">
+                        Progesso mensal
+                      </h2>
+                      <Chart
+                        data={generateFakeProgressData("monthly")}
+                        chartType="pie"
+                        mini={true}
+                        title="Progresso das tarefas ao longo do mês"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-6">
+                    <h2 className="text-xs text-default-gray mb-4">
+                      Progresso geral
+                    </h2>
+                    <Chart
+                      data={generateFakeProgressData("general")}
+                      chartType="line"
+                      title="Progresso total da atividade"
+                    />
+                  </div>
                 </AccordionContent>
               </AccordionItem>
             );
