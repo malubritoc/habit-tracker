@@ -4,7 +4,7 @@ import { Habit } from '@/types/habit';
 import { DayOfWeek } from '@/types/daysOfTheWeek';
 
 interface createUserHabitRequest {
-  token: string;
+  token: string | undefined;
   name: string;
   description: string;
   days: DayOfWeek[]

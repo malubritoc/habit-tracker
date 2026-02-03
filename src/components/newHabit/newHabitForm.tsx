@@ -20,10 +20,12 @@ import { useToast } from "../hooks/use-toast";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
-import { createDailyRecordIfNotExists, createHabit } from "@/services/firebase";
+import { createDailyRecordIfNotExists } from "@/services/firebase";
 import { DayOfWeek } from "@/types/daysOfTheWeek";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
+import { API } from "@/services/api/@index";
+import { useSession } from "next-auth/react";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Título inválido.").max(24),
@@ -39,16 +41,17 @@ export function NewHabitForm({
 }: {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }) {
+  const { data: session } = useSession();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const days = [
-    { title: "Segunda-feira", value: "mon" as DayOfWeek },
-    { title: "Terça-feira", value: "tue" as DayOfWeek },
-    { title: "Quarta-feira", value: "wed" as DayOfWeek },
-    { title: "Quinta-feira", value: "thu" as DayOfWeek },
-    { title: "Sexta-feira", value: "fri" as DayOfWeek },
-    { title: "Sábado", value: "sat" as DayOfWeek },
-    { title: "Domingo", value: "sun" as DayOfWeek },
+    { title: "Segunda-feira", value: "SEGUNDA" as DayOfWeek },
+    { title: "Terça-feira", value: "TERCA" as DayOfWeek },
+    { title: "Quarta-feira", value: "QUARTA" as DayOfWeek },
+    { title: "Quinta-feira", value: "QUINTA" as DayOfWeek },
+    { title: "Sexta-feira", value: "SEXTA" as DayOfWeek },
+    { title: "Sábado", value: "SABADO" as DayOfWeek },
+    { title: "Domingo", value: "DOMINGO" as DayOfWeek },
   ];
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
   const { setUpdateRecords } = useContext(RecordsContext);
@@ -76,7 +79,7 @@ export function NewHabitForm({
       (prevDays) =>
         prevDays.includes(day)
           ? prevDays.filter((d) => d !== day) // Remove o dia se já estiver selecionado
-          : [...prevDays, day] // Adiciona o dia se não estiver selecionado
+          : [...prevDays, day], // Adiciona o dia se não estiver selecionado
     );
   }
 
@@ -103,16 +106,22 @@ export function NewHabitForm({
         }
       }
 
-      await createHabit("habits", {
+      await API.createUserHabit({
+        token: session?.accessToken,
         name: data.title,
-        frequency: parseInt(data.frequency),
         days:
           frequency == "7"
-            ? ["sun", "mon", "tue", "wed", "thu", "fri", "sat"]
+            ? [
+                "DOMINGO",
+                "SEGUNDA",
+                "TERCA",
+                "QUARTA",
+                "QUINTA",
+                "SEXTA",
+                "SABADO",
+              ]
             : selectedDays,
-        done: false,
         description: data.description,
-        user_id: user.id,
       })
         .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {
