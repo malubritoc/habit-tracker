@@ -1,6 +1,11 @@
 import { createUser } from "./createUser";
+import { createUserHabit } from "./createUserHabit";
 import { deleteUser } from "./deleteUser";
+import { deleteUserHabit } from "./deleteUserHabit";
 import { getUser } from "./getUser";
+import { getUserHabitById } from "./getUserHabitById";
+import { getUserHabits } from "./getUserHabits";
+import { patchUserHabit } from "./patchUserHabit";
 import { updatePassword } from "./updatePassword";
 import { updateProfile } from "./updateProfile";
 
@@ -15,4 +20,11 @@ static deleteUser = deleteUser;
 
 static updateProfile = updateProfile;
 static updatePassword = updatePassword;
+
+//Habits
+static getUserHabits = getUserHabits;
+static getUserHabitById = getUserHabitById;
+static createUserHabit = createUserHabit;
+static patchUserHabit = patchUserHabit;
+static deleteUserHabit = deleteUserHabit;
 }

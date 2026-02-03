@@ -2,9 +2,8 @@ import { DayOfWeek } from "./daysOfTheWeek";
 
 export interface Habit {
     id: string;
-    name: string;
-    description: string;
-    frequency: number;
-    days: DayOfWeek[];
-    user_id: string;
+    titulo: string;
+    descricao: string;
+    frequencia: number;
+    diasSemana: DayOfWeek[];
 }

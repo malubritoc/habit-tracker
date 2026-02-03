@@ -32,7 +32,7 @@ export default function HomePage() {
 
         // Ordena os registros para que 'done = false' apareçam primeiro
         updatedRecords.sort(
-          (a: Record, b: Record) => Number(a.done) - Number(b.done)
+          (a: Record, b: Record) => Number(a.done) - Number(b.done),
         );
 
         return updatedRecords;
@@ -45,7 +45,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0">
-        <h1 className="text-3xl font-bold">Olá, {user?.name}!</h1>
+        <h1 className="text-3xl font-bold">Olá, {user?.nomeExibicao}!</h1>
         <h4 className="text-md text-default-gray">
           Hoje é dia <strong>{today}</strong>. O que você fez hoje?
         </h4>
@@ -65,11 +65,11 @@ export default function HomePage() {
                     "p-4 rounded-2xl",
                     "data-[done=true]:bg-light-turquoise bg-light-orange",
                     "font-bold text-xl data-[done=true]:text-dark-turquoise text-baby-yellow",
-                    "cursor-pointer"
+                    "cursor-pointer",
                   )}
                   key={idx}
                 >
-                  <p className="max-w-[90%]">{record.habit.name}</p>
+                  <p className="max-w-[90%]">{record.habit.titulo}</p>
                   {record.done ? (
                     <div className="w-full flex justify-end">
                       <Check size={24} color="#2c6b74" />
