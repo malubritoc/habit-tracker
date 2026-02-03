@@ -11,8 +11,8 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { toast } from "../hooks/use-toast";
-import { signUp } from "@/services/firebase";
 import { useRouter } from "next/navigation";
+import { API } from "@/services/api/@index";
 
 const signUpFormSchema = z.object({
   name: z.string().min(1, "Nome inválido."),
@@ -45,8 +45,6 @@ export function SignUpForm() {
   const handleSignUp = async (data: SignUpFormInputs) => {
     setLoading(true);
     try {
-      // console.log(data);
-
       if (password !== confirmPassword) {
         setError("confirmPassword", {
           type: "manual",
@@ -56,10 +54,9 @@ export function SignUpForm() {
         return;
       }
 
-      await signUp({
+      await API.createUser({
         email: data.email,
         password: data.password,
-        name: data.name,
       }).then(() => {
         toast({
           variant: "success",

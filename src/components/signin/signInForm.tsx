@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import "@/styles/forms_styles.css";
@@ -12,8 +13,8 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { toast } from "../hooks/use-toast";
-import { signIn } from "@/services/firebase";
 import { useRouter } from "next/navigation";
+import { signIn } from "next-auth/react";
 
 const signInFormSchema = z.object({
   email: z.string().email("E-mail inválido."),
@@ -39,22 +40,32 @@ export function SignInForm() {
 
   const handleSignIn = async (data: SignInFormInputs) => {
     setLoading(true);
-    try {
-      // console.log(data);
 
-      await signIn({
+    try {
+      const result = await signIn("credentials", {
         email: data.email,
-        password: data.password,
-      }).then(() => {
-        setLoading(false);
-        router.push("/home");
+        senha: data.password,
+        redirect: false,
       });
-    } catch (error) {
+
+      if (result?.error) {
+        toast({
+          variant: "destructive",
+          title: "Erro ao fazer login",
+          description: "Verifique seus dados e tente novamente.",
+        });
+        setLoading(false);
+        return;
+      }
+
+      router.replace("/home");
+      router.refresh();
+    } catch (error: any) {
       console.error(error);
       toast({
         variant: "destructive",
-        title: "Erro ao fazer login",
-        description: "Verifique seus dados e tente novamente.",
+        title: "Erro inesperado",
+        description: "Ocorreu um erro ao processar sua solicitação.",
       });
       setLoading(false);
     }
