@@ -3,8 +3,7 @@ import axios from 'axios';
 import { API_BASE_URL } from './@index';
 
 
-export async function deleteUser(): Promise<any> {
-    const token = 'sdjfndsfj'
+export async function deleteUser(token: string | undefined): Promise<any> {
 
   const response = await axios.delete<any>(
     `${API_BASE_URL}/v1/usuarios/me`,

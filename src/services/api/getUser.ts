@@ -3,8 +3,7 @@ import { API_BASE_URL } from './@index';
 import { User } from '@/types/users';
 
 
-export async function createUser(): Promise<User> {
-    const token = 'sdjfndsfj'
+export async function getUser(token: string | undefined): Promise<User> {
 
   const response = await axios.get<User>(
     `${API_BASE_URL}/v1/usuarios/me`,

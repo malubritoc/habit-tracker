@@ -8,10 +8,10 @@ import {
   useState,
 } from "react";
 import { User } from "@/types/users";
-import { parseCookies } from "nookies";
-import { getUserById } from "@/services/firebase";
 import { toast } from "@/components/hooks/use-toast";
 import { redirect } from "next/navigation";
+import { API } from "@/services/api/@index";
+import { useSession } from "next-auth/react";
 
 interface UserContextProps {
   user: User | null;
@@ -20,16 +20,15 @@ interface UserContextProps {
 export const UserContext = createContext({} as UserContextProps);
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
+  const { data: session } = useSession();
   const [user, setUser] = useState<User | null>(null);
-  const user_id = parseCookies()["habit-tracker-user"];
 
   async function getData() {
     try {
-      // Obtém todos os hábitos
-      const user = await getUserById(user_id);
+      const user = await API.getUser(session?.accessToken);
 
       if (user) {
-        setUser(user[0]);
+        setUser(user);
       } else {
         redirect("/");
       }
