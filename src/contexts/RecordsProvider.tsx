@@ -11,7 +11,7 @@ import {
 import { Record } from "../types/records";
 import { useToast } from "@/components/hooks/use-toast";
 import { useSession } from "next-auth/react";
-import { getTodayUserHabitRecords } from "@/services/api/getTodayUserHabitRecords";
+import { API } from "@/services/api/@index";
 
 interface RecordsContextProps {
   records: Record[] | null;
@@ -31,7 +31,7 @@ export function RecordsProvider({ children }: { children: React.ReactNode }) {
 
   async function getData() {
     try {
-      const recordsResponse = await getTodayUserHabitRecords(
+      const recordsResponse = await API.getTodayUserHabitRecords(
         session?.accessToken,
       );
 

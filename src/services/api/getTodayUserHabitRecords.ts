@@ -6,7 +6,7 @@ import { Record } from '@/types/records';
 export async function getTodayUserHabitRecords(token: string | undefined): Promise<Record[]> {
 
   const response = await axios.get<Record[]>(
-    `${API_BASE_URL}/v1/habitos/registros/hoje`,
+    `${API_BASE_URL}/v1/habits/records/today`,
     {
       headers: {
         Authorization: `Bearer ${token}`
