@@ -9,14 +9,14 @@ const handler = NextAuth({
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "text" },
-        senha: { label: "Senha", type: "password" }
+        password: { label: "Password", type: "password" }
       },
       async authorize(credentials) {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
           method: "POST",
           body: JSON.stringify({
             email: credentials?.email,
-            senha: credentials?.senha,
+            password: credentials?.password,
           }),
           headers: { "Content-Type": "application/json" },
         });
