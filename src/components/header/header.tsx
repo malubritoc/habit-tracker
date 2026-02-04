@@ -3,7 +3,13 @@
 import clsx from "clsx";
 import Image from "next/image";
 import logo from "@/assets/logo.png";
-import { ChartNoAxesCombined, House, LogOut, User } from "lucide-react";
+import {
+  ChartNoAxesCombined,
+  House,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,9 +20,12 @@ import {
 import { useRouter } from "next/navigation";
 import { NewHabitButton } from "../newHabit/newHabitButton";
 import { signOut } from "next-auth/react";
+import { useContext } from "react";
+import { UserContext } from "@/contexts/UserProvider";
 
 export function Header() {
   const router = useRouter();
+  const { user } = useContext(UserContext);
 
   async function handleLogout() {
     await signOut({ callbackUrl: "/" });
@@ -53,6 +62,13 @@ export function Header() {
       <div className="flex items-center gap-3">
         <div className="cursor-pointer" onClick={() => router.push("/home")}>
           <House size={28} color="#fef5c8" />
+        </div>
+        <div
+          data-admin={user && user.role === "ADMIN"}
+          className="cursor-pointer data-[admin=false]:hidden"
+          onClick={() => router.push("/admin")}
+        >
+          <Settings size={28} color="#fef5c8" />
         </div>
         <div className="h-8 border border-t-[1px] border-[#fef5c8]" />
         <NewHabitButton />

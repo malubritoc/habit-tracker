@@ -3,8 +3,10 @@ import { createExtraUserHabitRecord } from "./createExtraUserHabitRecord";
 import { createUser } from "./createUser";
 import { createUserHabit } from "./createUserHabit";
 import { deleteUser } from "./deleteUser";
+import { deleteUserAdmin } from "./deleteUserAdmin";
 import { deleteUserHabit } from "./deleteUserHabit";
 import { deleteUserHabitRecord } from "./deleteUserHabitRecord";
+import { getAllUsers } from "./getAllUsers";
 import { getTodayUserHabitRecords } from "./getTodayUserHabitRecords";
 import { getUser } from "./getUser";
 import { getUserHabitById } from "./getUserHabitById";
@@ -40,4 +42,7 @@ static deleteUserHabitRecord = deleteUserHabitRecord;
 static getTodayUserHabitRecords = getTodayUserHabitRecords;
 static getUserHabitRecords = getUserHabitRecords
 
+//Admin
+static getAllUsers = getAllUsers;
+static deleteUserAdmin = deleteUserAdmin;
 }
