@@ -9,7 +9,7 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "@/contexts/UserProvider";
 import { API } from "@/services/api/@index";
 import { signOut, useSession } from "next-auth/react";
@@ -33,14 +33,26 @@ export function ProfileForm() {
     register,
     handleSubmit,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<profileInputs>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.displayName ?? "",
-      email: user?.email ?? "",
+      name: user?.displayName,
+      email: user?.email,
+      bio: user?.bio,
     },
   });
+
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.displayName,
+        email: user.email,
+        bio: user.bio || "",
+      });
+    }
+  }, [user, reset]);
 
   async function handleEditProfile(data: profileInputs) {
     setLoading(true);
@@ -50,8 +62,8 @@ export function ProfileForm() {
           token: session?.accessToken,
           name: data.name,
           bio: data.bio,
-        }).then(() => {
-          setUser({ ...user, displayName: data.name });
+        }).then((response) => {
+          setUser(response);
           toast({
             variant: "success",
             title: "Perfil editado com sucesso",
@@ -138,18 +150,28 @@ export function ProfileForm() {
         </Button>
       )}{" "}
       {!edit && (
-        <Button className="w-fit self-end px-12" onClick={() => setEdit(true)}>
-          Editar Perfil
-        </Button>
+        <div className="flex flex-col">
+          <div className="w-full flex items-center justify-between gap-2">
+            <Button
+              type="button"
+              onClick={() => handleDeleteAccount()}
+              variant="destructive"
+              className="w-[200px]"
+            >
+              Excluir conta
+            </Button>
+            <Button
+              className="min-w-[200px] w-fit self-end px-12"
+              onClick={() => setEdit(true)}
+            >
+              Editar Perfil
+            </Button>
+          </div>
+          <span className="text-xs text-red-500">
+            *Esta ação não poderá ser desfeita
+          </span>
+        </div>
       )}
-      <div className="flex flex-col">
-        <Button onClick={() => handleDeleteAccount()} variant="destructive">
-          Excluir conta
-        </Button>
-        <span className="text-xs text-red-500">
-          *Esta ação não poderá ser desfeita
-        </span>
-      </div>
     </form>
   );
 }
