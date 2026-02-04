@@ -153,10 +153,11 @@ export function ProfileForm() {
         <div className="flex flex-col">
           <div className="w-full flex items-center justify-between gap-2">
             <Button
+              data-admin={user && user.role === "ADMIN"}
               type="button"
               onClick={() => handleDeleteAccount()}
               variant="destructive"
-              className="w-[200px]"
+              className="w-[200px] data-[admin=true]:hidden"
             >
               Excluir conta
             </Button>
@@ -167,7 +168,10 @@ export function ProfileForm() {
               Editar Perfil
             </Button>
           </div>
-          <span className="text-xs text-red-500">
+          <span
+            data-admin={user && user.role === "ADMIN"}
+            className="text-xs text-red-500 data-[admin=true]:hidden"
+          >
             *Esta ação não poderá ser desfeita
           </span>
         </div>

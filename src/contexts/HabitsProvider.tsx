@@ -16,11 +16,14 @@ interface HabitsContextProps {
   habits: Habit[] | null;
   setHabits: Dispatch<SetStateAction<Habit[] | null>>;
   loading: boolean;
+  updateHabits: boolean;
+  setUpdateHabits: Dispatch<SetStateAction<boolean>>;
 }
 export const HabitsContext = createContext({} as HabitsContextProps);
 
 export function HabitsProvider({ children }: { children: React.ReactNode }) {
   const [habits, setHabits] = useState<Habit[] | null>(null);
+  const [updateHabits, setUpdateHabits] = useState(false);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
   const { data: session } = useSession();
@@ -51,8 +54,15 @@ export function HabitsProvider({ children }: { children: React.ReactNode }) {
     getData();
   }, []);
 
+  useEffect(() => {
+    getData();
+    setUpdateHabits(false);
+  }, [updateHabits]);
+
   return (
-    <HabitsContext.Provider value={{ habits, setHabits, loading }}>
+    <HabitsContext.Provider
+      value={{ habits, setHabits, loading, updateHabits, setUpdateHabits }}
+    >
       {children}
     </HabitsContext.Provider>
   );

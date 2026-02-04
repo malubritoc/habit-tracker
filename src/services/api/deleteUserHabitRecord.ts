@@ -22,7 +22,5 @@ export async function deleteUserHabitRecord({
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

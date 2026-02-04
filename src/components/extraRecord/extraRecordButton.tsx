@@ -13,7 +13,6 @@ export function ExtraRecordButton() {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <div
-          onClick={() => console.log("oi")}
           className={clsx(
             "flex flex-col justify-between",
             "w-[170px] h-[170px]",

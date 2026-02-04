@@ -23,7 +23,5 @@ export async function completeUserHabitRecord({
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

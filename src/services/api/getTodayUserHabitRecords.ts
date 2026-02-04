@@ -14,7 +14,5 @@ export async function getTodayUserHabitRecords(token: string | undefined): Promi
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

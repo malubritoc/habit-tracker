@@ -14,7 +14,5 @@ export async function getUserHabitById({id, token} : {id: string, token: string 
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

@@ -51,7 +51,15 @@ export default function HomePage() {
 
         return updatedRecords;
       });
+      toast({
+        variant: "success",
+        title: "Registro feito com sucesso!",
+      });
     } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Não foi possível concluir registro.",
+      });
       console.error("Erro ao atualizar o hábito: ", error);
     }
   }

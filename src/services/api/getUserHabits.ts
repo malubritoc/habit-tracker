@@ -14,7 +14,5 @@ export async function getUserHabits(token: string | undefined): Promise<Habit[]>
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

@@ -89,11 +89,10 @@ export function ExtraRecordForm({
         <Controller
           name="habitId"
           control={control}
-          defaultValue="7"
           render={({ field: { onChange, value } }) => (
             <Select value={value} onValueChange={onChange}>
               <SelectTrigger>
-                <SelectValue placeholder="Selecione a frequência" />
+                <SelectValue placeholder="Selecione o hábito que deseja registrar" />
               </SelectTrigger>
               <SelectContent>
                 {habits?.map((habit, idx) => {

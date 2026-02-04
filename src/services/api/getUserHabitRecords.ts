@@ -13,7 +13,5 @@ export async function getUserHabitRecords({habitId, token} : {habitId: string; t
     }
   );
 
-  console.log(response)
-
   return response.data;
 }

@@ -25,6 +25,7 @@ import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
 import { API } from "@/services/api/@index";
 import { useSession } from "next-auth/react";
+import { HabitsContext } from "@/contexts/HabitsProvider";
 
 const newHabitFormSchema = z.object({
   title: z.string().min(1, "Título inválido.").max(24),
@@ -55,6 +56,7 @@ export function NewHabitForm({
   const [selectedDays, setSelectedDays] = useState<DayOfWeek[]>([]);
   const { setUpdateRecords } = useContext(RecordsContext);
   const { user } = useContext(UserContext);
+  const { setUpdateHabits } = useContext(HabitsContext);
 
   const {
     register,
@@ -126,6 +128,7 @@ export function NewHabitForm({
         .then((record) => {
           if (record) {
             setUpdateRecords(true);
+            setUpdateHabits(true);
           }
         });
       setLoading(false);

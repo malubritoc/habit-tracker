@@ -23,7 +23,5 @@ export async function createExtraUserHabitRecord({
     }
   );
 
-  console.log(response)
-
   return response.data;
 }
