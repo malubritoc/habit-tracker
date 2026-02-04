@@ -13,7 +13,7 @@ export async function deleteUserHabit({
 }: deleteUserHabitRequest): Promise<any> {
 
   const response = await axios.delete<any>(
-    `${API_BASE_URL}/v1/habitos/${id}`,
+    `${API_BASE_URL}/v1/habits/${id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`

@@ -13,10 +13,10 @@ export async function createUser({
 }: createUserRequest): Promise<User> {
 
   const response = await axios.post<User>(
-    `${API_BASE_URL}/v1/usuarios`,
+    `${API_BASE_URL}/v1/users`,
     {
         email,
-        senha: password
+        password
     },  
   );
 

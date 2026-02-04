@@ -6,7 +6,7 @@ import { User } from '@/types/users';
 export async function getUser(token: string | undefined): Promise<User> {
 
   const response = await axios.get<User>(
-    `${API_BASE_URL}/v1/usuarios/me`,
+    `${API_BASE_URL}/v1/users/me`,
     {
       headers: {
         Authorization: `Bearer ${token}`

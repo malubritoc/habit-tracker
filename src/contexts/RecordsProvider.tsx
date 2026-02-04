@@ -10,14 +10,8 @@ import {
 } from "react";
 import { Record } from "../types/records";
 import { useToast } from "@/components/hooks/use-toast";
-import {
-  createDailyRecordIfNotExists,
-  getAllHabits,
-  // getTodayRecords,
-  getTodayRecordsByUserId,
-} from "@/services/firebase";
-// import { UserContext } from "./UserProvider";
-import { parseCookies } from "nookies";
+import { useSession } from "next-auth/react";
+import { getTodayUserHabitRecords } from "@/services/api/getTodayUserHabitRecords";
 
 interface RecordsContextProps {
   records: Record[] | null;
@@ -30,28 +24,19 @@ export const RecordsContext = createContext({} as RecordsContextProps);
 export function RecordsProvider({ children }: { children: React.ReactNode }) {
   const [records, setRecords] = useState<Record[] | null>(null);
   const [loading, setLoading] = useState(true);
-  // const [empty, setEmpty] = useState(false);
+
   const [updateRecords, setUpdateRecords] = useState(false);
   const { toast } = useToast();
-  const user_id = parseCookies()["habit-tracker-user"];
+  const { data: session } = useSession();
 
   async function getData() {
     try {
-      // Obtém todos os hábitos
-      const habitsResponse = await getAllHabits();
-
-      // Se há hábitos, cria registros diários para os que estão ativos no dia atual
-      if (habitsResponse.length > 0) {
-        // console.log("Há hábitos cadastrados");
-        for (const habit of habitsResponse) {
-          await createDailyRecordIfNotExists(habit, "records");
-        }
-      }
-
-      const recordsResponse = await getTodayRecordsByUserId(user_id);
+      const recordsResponse = await getTodayUserHabitRecords(
+        session?.accessToken,
+      );
 
       recordsResponse?.sort((a: Record, b: Record) => {
-        return Number(a.done) - Number(b.done);
+        return Number(a.isCompleted) - Number(b.isCompleted);
       });
 
       setRecords(recordsResponse);

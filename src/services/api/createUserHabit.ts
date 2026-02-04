@@ -5,24 +5,24 @@ import { DayOfWeek } from '@/types/daysOfTheWeek';
 
 interface createUserHabitRequest {
   token: string | undefined;
-  name: string;
+  title: string;
   description: string;
-  days: DayOfWeek[]
+  daysOfWeek: DayOfWeek[]
 }
 
 export async function createUserHabit({
   token,
-  name,
+  title,
   description,
-  days
+  daysOfWeek
 }: createUserHabitRequest): Promise<Habit> {
 
   const response = await axios.post<Habit>(
-    `${API_BASE_URL}/v1/habitos`,
+    `${API_BASE_URL}/v1/habits`,
     {
-        titulo: name,
-        descricao: description,
-        diasSemana: days
+        title,
+        description,
+        daysOfWeek
     },  
     {
       headers: {

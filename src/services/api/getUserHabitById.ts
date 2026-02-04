@@ -6,7 +6,7 @@ import { Habit } from '@/types/habit';
 export async function getUserHabitById({id, token} : {id: string, token: string | undefined}): Promise<Habit> {
 
   const response = await axios.get<Habit>(
-    `${API_BASE_URL}/v1/habitos/${id}`,
+    `${API_BASE_URL}/v1/habits/${id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`

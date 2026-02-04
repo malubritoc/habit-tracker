@@ -15,9 +15,9 @@ export async function updateProfile({
 }: updateProfileRequest): Promise<any> {
 
   const response = await axios.patch<any>(
-    `${API_BASE_URL}/v1/usuarios/me/perfil`,
+    `${API_BASE_URL}/v1/users/me/profile`,
     {
-        nomeExibicao: name,
+        displayName: name,
         bio
     },  
         {

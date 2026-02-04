@@ -6,25 +6,25 @@ import { DayOfWeek } from '@/types/daysOfTheWeek';
 interface patchUserHabitRequest {
   token: string;
   id: string;
-  name: string;
+  title: string;
   description: string;
-  days: DayOfWeek[]
+  daysOfWeek: DayOfWeek[]
 }
 
 export async function patchUserHabit({
   token,
   id,
-  name,
+  title,
   description,
-  days
+  daysOfWeek
 }: patchUserHabitRequest): Promise<Habit> {
 
   const response = await axios.patch<Habit>(
-    `${API_BASE_URL}/v1/habitos/${id}`,
+    `${API_BASE_URL}/v1/habits/${id}`,
     {
-        titulo: name,
-        descricao: description,
-        diasSemana: days
+        title,
+        description,
+        daysOfWeek
     },  
     {
       headers: {

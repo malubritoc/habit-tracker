@@ -15,10 +15,10 @@ export async function updatePassword({
 }: updatePasswordRequest): Promise<any> {
 
   const response = await axios.patch<any>(
-    `${API_BASE_URL}/v1/usuarios/me/senha`,
+    `${API_BASE_URL}/v1/users/me/password`,
     {
-        senhaAtual: password,
-        novaSenha: newPassword
+        currentPassword: password,
+        newPassword
     },  
         {
       headers: {

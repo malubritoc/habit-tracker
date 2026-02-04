@@ -32,7 +32,8 @@ export default function HomePage() {
 
         // Ordena os registros para que 'done = false' apareçam primeiro
         updatedRecords.sort(
-          (a: Record, b: Record) => Number(a.done) - Number(b.done),
+          (a: Record, b: Record) =>
+            Number(a.isCompleted) - Number(b.isCompleted),
         );
 
         return updatedRecords;
@@ -56,9 +57,9 @@ export default function HomePage() {
               return (
                 <div
                   onClick={() =>
-                    updateHabitRecordStatus(record.id, !record.done)
+                    updateHabitRecordStatus(record.id, !record.isCompleted)
                   }
-                  data-done={record.done}
+                  data-done={record.isCompleted}
                   className={clsx(
                     "flex flex-col justify-between",
                     "w-[170px] h-[170px]",
@@ -69,8 +70,8 @@ export default function HomePage() {
                   )}
                   key={idx}
                 >
-                  <p className="max-w-[90%]">{record.habit.titulo}</p>
-                  {record.done ? (
+                  <p className="max-w-[90%]">{record.habitId}</p>
+                  {record.isCompleted ? (
                     <div className="w-full flex justify-end">
                       <Check size={24} color="#2c6b74" />
                     </div>
