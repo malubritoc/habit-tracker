@@ -20,7 +20,6 @@ import { useToast } from "../hooks/use-toast";
 import { Dispatch, SetStateAction, useContext, useState } from "react";
 import { Separator } from "../ui/separator";
 import { Checkbox } from "../ui/checkbox";
-import { createDailyRecordIfNotExists } from "@/services/firebase";
 import { DayOfWeek } from "@/types/daysOfTheWeek";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
@@ -108,8 +107,8 @@ export function NewHabitForm({
 
       await API.createUserHabit({
         token: session?.accessToken,
-        name: data.title,
-        days:
+        title: data.title,
+        daysOfWeek:
           frequency == "7"
             ? [
                 "DOMINGO",
@@ -123,7 +122,7 @@ export function NewHabitForm({
             : selectedDays,
         description: data.description,
       })
-        .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
+        // .then((docRef) => createDailyRecordIfNotExists(docRef, "records"))
         .then((record) => {
           if (record) {
             setUpdateRecords(true);

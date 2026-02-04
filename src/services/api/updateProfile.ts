@@ -5,7 +5,7 @@ import { API_BASE_URL } from './@index';
 interface updateProfileRequest {
   token: string | undefined;
   name: string;
-  bio: string;
+  bio?: string;
 }
 
 export async function updateProfile({

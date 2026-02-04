@@ -2,8 +2,8 @@ export interface User {
   id: string;
   email:  string;
   role:  string;
-  nomeExibicao:  string;
+  displayName:  string;
   bio:  string;
-  nivel: number;
-  pontosExperiencia: number
+  level: number;
+  xpPoints: number
 }

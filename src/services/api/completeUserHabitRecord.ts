@@ -15,6 +15,7 @@ export async function completeUserHabitRecord({
 
   const response = await axios.patch<any>(
     `${API_BASE_URL}/v1/habits/${habitId}/records/${recordId}/complete`,
+    {},
     {
       headers: {
         Authorization: `Bearer ${token}`

@@ -11,17 +11,20 @@ import { SpinnerGraySmall } from "../spinnerGraySmall";
 import { useToast } from "../hooks/use-toast";
 import { useContext, useState } from "react";
 import { UserContext } from "@/contexts/UserProvider";
-import { updateDBUser } from "@/services/firebase";
+import { API } from "@/services/api/@index";
+import { signOut, useSession } from "next-auth/react";
 
 const profileSchema = z.object({
   name: z.string().min(2, "Nome inválido."),
   email: z.string().email(),
+  bio: z.string().optional(),
 });
 
 type profileInputs = z.infer<typeof profileSchema>;
 
 export function ProfileForm() {
   const { toast } = useToast();
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
   const { user, setUser } = useContext(UserContext);
@@ -30,13 +33,11 @@ export function ProfileForm() {
     register,
     handleSubmit,
     setValue,
-    // watch,
-    // setError,
     formState: { errors },
   } = useForm<profileInputs>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      name: user?.name ?? "",
+      name: user?.displayName ?? "",
       email: user?.email ?? "",
     },
   });
@@ -44,15 +45,13 @@ export function ProfileForm() {
   async function handleEditProfile(data: profileInputs) {
     setLoading(true);
     try {
-      // console.log(data);
-
       if (user) {
-        // console.log(user?.id);
-        await updateDBUser({
-          new_name: data.name,
-          user_id: user?.id,
+        await API.updateProfile({
+          token: session?.accessToken,
+          name: data.name,
+          bio: data.bio,
         }).then(() => {
-          setUser({ ...user, name: data.name });
+          setUser({ ...user, displayName: data.name });
           toast({
             variant: "success",
             title: "Perfil editado com sucesso",
@@ -64,7 +63,7 @@ export function ProfileForm() {
       setLoading(false);
     } catch (error) {
       if (user) {
-        setValue("name", user?.name);
+        setValue("name", user?.displayName);
       }
       console.log(error);
       toast({
@@ -77,6 +76,20 @@ export function ProfileForm() {
     setEdit(false);
   }
 
+  async function handleDeleteAccount() {
+    try {
+      await API.deleteUser(session?.accessToken).then(() =>
+        signOut({ callbackUrl: "/" }),
+      );
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao deletar conta",
+      });
+    }
+  }
+
   return (
     <form
       className="w-full flex flex-col gap-4"
@@ -86,7 +99,7 @@ export function ProfileForm() {
         <Label>E-mail</Label>
         <Input
           {...register("email")}
-          placeholder="Digite aqui o título do seu hábito"
+          placeholder="Digite aqui o seu e-mail"
           disabled
         />
         {errors.email && (
@@ -97,11 +110,22 @@ export function ProfileForm() {
         <Label>Nome</Label>
         <Input
           {...register("name")}
-          placeholder="Digite aqui o título do seu hábito"
+          placeholder="Digite aqui seu nome"
           disabled={!edit}
         />
         {errors.name && (
           <span className="error-message">{errors.name.message}</span>
+        )}
+      </div>
+      <div className="div-field">
+        <Label>Bio</Label>
+        <Input
+          {...register("bio")}
+          placeholder="Digite aqui a sua bio"
+          disabled={!edit}
+        />
+        {errors.bio && (
+          <span className="error-message">{errors.bio.message}</span>
         )}
       </div>
       {edit && (
@@ -118,6 +142,14 @@ export function ProfileForm() {
           Editar Perfil
         </Button>
       )}
+      <div className="flex flex-col">
+        <Button onClick={() => handleDeleteAccount()} variant="destructive">
+          Excluir conta
+        </Button>
+        <span className="text-xs text-red-500">
+          *Esta ação não poderá ser desfeita
+        </span>
+      </div>
     </form>
   );
 }

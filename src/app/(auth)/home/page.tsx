@@ -3,26 +3,36 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
-import { updateHabitRecordStatusFB } from "@/services/firebase";
+import { API } from "@/services/api/@index";
 import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
 import { Check } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useContext } from "react";
 
 export default function HomePage() {
-  const { records, setRecords, loading } = useContext(RecordsContext);
+  const { records, setRecords, loading, setUpdateRecords } =
+    useContext(RecordsContext);
   const { user } = useContext(UserContext);
   const today = formatDate(new Date().toISOString().split("T")[0]);
+  const { data: session } = useSession();
 
-  async function updateHabitRecordStatus(habitRecordId: string, done: boolean) {
+  async function updateHabitRecordStatus(
+    habitId: string,
+    habitRecordId: string,
+    done: boolean,
+  ) {
     try {
-      await updateHabitRecordStatusFB("records", habitRecordId, done);
-      // console.log(`Hábito ${habitId} atualizado com sucesso!`);
+      await API.completeUserHabitRecord({
+        token: session?.accessToken,
+        habitId: habitId,
+        recordId: habitRecordId,
+      }).then(() => setUpdateRecords(true));
+
       setRecords((prev) => {
         if (!prev) return [];
 
-        // Atualiza o registro no array
         const updatedRecords = prev.map((record) => {
           if (record.id === habitRecordId) {
             return { ...record, done };
@@ -30,7 +40,6 @@ export default function HomePage() {
           return record;
         });
 
-        // Ordena os registros para que 'done = false' apareçam primeiro
         updatedRecords.sort(
           (a: Record, b: Record) =>
             Number(a.isCompleted) - Number(b.isCompleted),
@@ -46,7 +55,7 @@ export default function HomePage() {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0">
-        <h1 className="text-3xl font-bold">Olá, {user?.nomeExibicao}!</h1>
+        <h1 className="text-3xl font-bold">Olá, {user?.displayName}!</h1>
         <h4 className="text-md text-default-gray">
           Hoje é dia <strong>{today}</strong>. O que você fez hoje?
         </h4>
@@ -57,7 +66,11 @@ export default function HomePage() {
               return (
                 <div
                   onClick={() =>
-                    updateHabitRecordStatus(record.id, !record.isCompleted)
+                    updateHabitRecordStatus(
+                      record.habitId,
+                      record.id,
+                      !record.isCompleted,
+                    )
                   }
                   data-done={record.isCompleted}
                   className={clsx(
@@ -70,7 +83,7 @@ export default function HomePage() {
                   )}
                   key={idx}
                 >
-                  <p className="max-w-[90%]">{record.habitId}</p>
+                  <p className="max-w-[90%]">{record.habitTitle}</p>
                   {record.isCompleted ? (
                     <div className="w-full flex justify-end">
                       <Check size={24} color="#2c6b74" />

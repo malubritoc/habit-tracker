@@ -14,6 +14,7 @@ export async function createExtraUserHabitRecord({
 
   const response = await axios.post<any>(
     `${API_BASE_URL}/v1/habits/${habitId}/records/extra`,
+    {},
     {
       headers: {
         Authorization: `Bearer ${token}`

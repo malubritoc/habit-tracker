@@ -13,13 +13,12 @@ import {
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { NewHabitButton } from "../newHabit/newHabitButton";
-import { logOut } from "@/services/firebase";
 
 export function Header() {
   const router = useRouter();
 
   async function handleLogout() {
-    await logOut();
+    // await logOut();
     router.push("/");
   }
 
@@ -46,7 +45,7 @@ export function Header() {
       className={clsx(
         "flex items-center justify-between",
         "md:px-16 py-4 px-4",
-        "bg-dark-blue"
+        "bg-dark-blue",
       )}
     >
       <Image src={logo} alt="Logo" width={70} height={70} />
