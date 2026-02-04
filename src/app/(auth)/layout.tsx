@@ -6,6 +6,7 @@ import { UserProvider } from "@/contexts/UserProvider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { SpinnerGraySmall } from "@/components/spinnerGraySmall";
+import { HabitsProvider } from "@/contexts/HabitsProvider";
 
 function AuthGuard({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
@@ -39,7 +40,9 @@ export default function AuthenticatedLayout({
     <SessionProvider>
       <AuthGuard>
         <UserProvider>
-          <RecordsProvider>{children}</RecordsProvider>
+          <HabitsProvider>
+            <RecordsProvider>{children}</RecordsProvider>
+          </HabitsProvider>
         </UserProvider>
       </AuthGuard>
     </SessionProvider>

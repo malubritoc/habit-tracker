@@ -39,6 +39,8 @@ export function ExtraRecordForm({
   const [loading, setLoading] = useState(false);
   const { setUpdateRecords } = useContext(RecordsContext);
 
+  console.log(habits);
+
   const {
     handleSubmit,
     control,
@@ -50,9 +52,12 @@ export function ExtraRecordForm({
   async function handleCreateExtraRecord(data: extraRecordFormInputs) {
     setLoading(true);
     try {
+      const today = new Date();
+      console.log(today);
       await API.createExtraUserHabitRecord({
         token: session?.accessToken,
         habitId: data.habitId,
+        date: today.toISOString().split("T")[0],
       }).then((record) => {
         if (record) {
           setUpdateRecords(true);

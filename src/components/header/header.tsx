@@ -13,12 +13,13 @@ import {
 } from "../ui/dropdown-menu";
 import { useRouter } from "next/navigation";
 import { NewHabitButton } from "../newHabit/newHabitButton";
+import { signOut } from "next-auth/react";
 
 export function Header() {
   const router = useRouter();
 
   async function handleLogout() {
-    // await logOut();
+    await signOut({ callbackUrl: "/" });
     router.push("/");
   }
 

@@ -1,11 +1,10 @@
 import axios from 'axios';
 import { API_BASE_URL } from './@index';
-import { Habit } from '@/types/habit';
+import { Record } from '@/types/records';
 
+export async function getUserHabitRecords({habitId, token} : {habitId: string; token: string | undefined}): Promise<Record[]> {
 
-export async function getUserHabitRecords({habitId, token} : {habitId: string; token: string | undefined}): Promise<Habit[]> {
-
-  const response = await axios.get<Habit[]>(
+  const response = await axios.get<Record[]>(
     `${API_BASE_URL}/v1/habits/${habitId}/records`,
     {
       headers: {
