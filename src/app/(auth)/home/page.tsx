@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
+import { ExtraRecordButton } from "@/components/extraRecord/extraRecordButton";
+import { toast } from "@/components/hooks/use-toast";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
@@ -7,7 +10,7 @@ import { API } from "@/services/api/@index";
 import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
-import { Check } from "lucide-react";
+import { Check, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useContext } from "react";
 
@@ -52,6 +55,28 @@ export default function HomePage() {
     }
   }
 
+  async function handleDeleteRecord(
+    e: any,
+    habitId: string,
+    habitRecordId: string,
+  ) {
+    e.stopPropagation();
+
+    try {
+      await API.deleteUserHabitRecord({
+        token: session?.accessToken,
+        habitId: habitId,
+        recordId: habitRecordId,
+      }).then(() => setUpdateRecords(true));
+    } catch (error) {
+      console.error(error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao deletar registro",
+      });
+    }
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-0">
@@ -84,15 +109,24 @@ export default function HomePage() {
                   key={idx}
                 >
                   <p className="max-w-[90%]">{record.habitTitle}</p>
-                  {record.isCompleted ? (
-                    <div className="w-full flex justify-end">
-                      <Check size={24} color="#2c6b74" />
+                  <div className="w-full flex items-center justify-between">
+                    <div
+                      onClick={(e) =>
+                        handleDeleteRecord(e, record.habitId, record.id)
+                      }
+                    >
+                      <Trash2 size={24} strokeWidth={1.5} />
                     </div>
-                  ) : (
-                    <div className="w-full flex justify-end">
-                      <div className="w-3 h-3 bg-baby-yellow rounded-full" />
-                    </div>
-                  )}
+                    {record.isCompleted ? (
+                      <div className="w-full flex justify-end">
+                        <Check size={24} color="#2c6b74" />
+                      </div>
+                    ) : (
+                      <div className="w-full flex justify-end">
+                        <div className="w-3 h-3 bg-baby-yellow rounded-full" />
+                      </div>
+                    )}
+                  </div>
                 </div>
               );
             })
@@ -106,6 +140,7 @@ export default function HomePage() {
                 </div>
               );
             })}
+        <ExtraRecordButton />
       </div>
       {records?.length === 0 && (
         <div className="flex flex-col items center self-center text-center">
