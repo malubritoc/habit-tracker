@@ -18,7 +18,7 @@ export function ExtraRecordButton() {
             "flex flex-col justify-between",
             "w-[170px] h-[170px]",
             "p-4 rounded-2xl",
-            "bg-light-turquoise",
+            "bg-baby-yellow",
             "font-bold text-xl text-dark-turquoise",
             "cursor-pointer",
           )}

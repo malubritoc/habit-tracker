@@ -39,8 +39,6 @@ export function ExtraRecordForm({
   const [loading, setLoading] = useState(false);
   const { setUpdateRecords } = useContext(RecordsContext);
 
-  console.log(habits);
-
   const {
     handleSubmit,
     control,

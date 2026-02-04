@@ -3,6 +3,7 @@
 
 import { ExtraRecordButton } from "@/components/extraRecord/extraRecordButton";
 import { toast } from "@/components/hooks/use-toast";
+import { PatchHabitButton } from "@/components/patchHabit/patchHabitButton";
 import { Skeleton } from "@/components/ui/skeleton";
 import { RecordsContext } from "@/contexts/RecordsProvider";
 import { UserContext } from "@/contexts/UserProvider";
@@ -10,7 +11,7 @@ import { API } from "@/services/api/@index";
 import { Record } from "@/types/records";
 import { formatDate } from "@/utils/formatDate";
 import clsx from "clsx";
-import { Check, Trash2 } from "lucide-react";
+import { Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useContext } from "react";
 
@@ -117,15 +118,9 @@ export default function HomePage() {
                     >
                       <Trash2 size={24} strokeWidth={1.5} />
                     </div>
-                    {record.isCompleted ? (
-                      <div className="w-full flex justify-end">
-                        <Check size={24} color="#2c6b74" />
-                      </div>
-                    ) : (
-                      <div className="w-full flex justify-end">
-                        <div className="w-3 h-3 bg-baby-yellow rounded-full" />
-                      </div>
-                    )}
+                    <div onClick={(e) => e.stopPropagation()}>
+                      <PatchHabitButton record={record} />
+                    </div>
                   </div>
                 </div>
               );
