@@ -15,7 +15,6 @@ import { useRouter } from "next/navigation";
 import { API } from "@/services/api/@index";
 
 const signUpFormSchema = z.object({
-  name: z.string().min(1, "Nome inválido."),
   email: z.string().email("E-mail inválido."),
   password: z.string().min(4, "Senha inválida."),
   confirmPassword: z.string().min(4, "Senha inválida."),
@@ -83,20 +82,7 @@ export function SignUpForm() {
       onSubmit={handleSubmit(handleSignUp)}
       className="w-full flex flex-col gap-[19px]"
     >
-      <h3 className="text-xl text-[#1a1a1a] font-bold">
-        Bem-vindo(a) de volta!
-      </h3>
-      <div className="div-fields">
-        <Label>Nome</Label>
-        <Input
-          type="text"
-          placeholder="Digite aqui seu nome"
-          {...register("name")}
-        />
-        {errors.name && (
-          <span className="text-xs text-red-500">{errors.name.message}</span>
-        )}
-      </div>
+      <h3 className="text-xl text-[#1a1a1a] font-bold">Cadastre-se agora!</h3>
       <div className="div-fields">
         <Label>E-mail</Label>
         <Input type="text" placeholder="Email" {...register("email")} />

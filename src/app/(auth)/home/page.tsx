@@ -76,7 +76,13 @@ export default function HomePage() {
         token: session?.accessToken,
         habitId: habitId,
         recordId: habitRecordId,
-      }).then(() => setUpdateRecords(true));
+      }).then(() => {
+        toast({
+          variant: "success",
+          title: "Registro deletado com sucesso!",
+        });
+        setUpdateRecords(true);
+      });
     } catch (error) {
       console.error(error);
       toast({

@@ -33,6 +33,7 @@ import { API } from "@/services/api/@index";
 import { useSession } from "next-auth/react";
 import { Habit } from "@/types/habit";
 import { Record } from "@/types/records";
+import { HabitsContext } from "@/contexts/HabitsProvider";
 
 const patchHabitFormSchema = z.object({
   title: z.string().min(1, "Título inválido.").max(24),
@@ -53,6 +54,7 @@ export function PatchHabitForm({
   const { data: session } = useSession();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
   const days = [
     { title: "Segunda-feira", value: "SEGUNDA" as DayOfWeek },
     { title: "Terça-feira", value: "TERCA" as DayOfWeek },
@@ -66,6 +68,7 @@ export function PatchHabitForm({
   const { setUpdateRecords } = useContext(RecordsContext);
   const { user } = useContext(UserContext);
   const [habit, setHabit] = useState<Habit | null>(null);
+  const { setUpdateHabits } = useContext(HabitsContext);
 
   async function fetchHabit() {
     try {
@@ -186,6 +189,31 @@ export function PatchHabitForm({
     }
   }
 
+  async function handleDeleteHabit() {
+    setDeleteLoading(true);
+    try {
+      await API.deleteUserHabit({
+        token: session?.accessToken,
+        id: record.habitId,
+      }).then(() => {
+        toast({
+          variant: "success",
+          title: "Hábito deletado com sucesso!",
+        });
+        setUpdateHabits(true);
+        setUpdateRecords(true);
+      });
+    } catch (error) {
+      console.log(error);
+      toast({
+        variant: "destructive",
+        title: "Erro ao deletar hábito",
+      });
+    } finally {
+      setDeleteLoading(false);
+    }
+  }
+
   return (
     <form
       className="w-full flex flex-col gap-4"
@@ -280,6 +308,14 @@ export function PatchHabitForm({
       <div className="w-full flex flex-col gap-2">
         <Button disabled={loading} type="submit" className="w-full px-6">
           {loading ? <SpinnerGraySmall /> : "Atualizar hábito"}
+        </Button>
+        <Button
+          onClick={() => handleDeleteHabit()}
+          disabled={loading}
+          type="button"
+          className="w-full px-6 bg-red-600 hover:bg-red-900"
+        >
+          {deleteLoading ? <SpinnerGraySmall /> : "Deletar hábito"}
         </Button>
         <Button
           type="button"
